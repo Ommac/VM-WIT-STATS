@@ -1,0 +1,88 @@
+======================================================================
+  VM-WIT-STATS | VM Medical College Statistical Analysis Toolkit
+  Module  : Chi-Square Test of Independence
+  Dataset : ../data/support2.csv
+  Date    : 2026-06-20 01:59:31
+======================================================================
+
+  DESCRIPTIVE STATISTICS
+----------------------------------------------------------------------
+  Variable         : dnr
+  Total Valid N    : 9,075
+  Categories (3): ['dnr after sadm', 'dnr before sadm', 'no dnr']
+  Category                            Count    Percent
+  ------------------------------ ---------- ----------
+  dnr after sadm                      2,956     32.57%
+  dnr before sadm                       239      2.63%
+  no dnr                              5,880     64.79%
+
+  Variable         : death
+  Total Valid N    : 9,075
+  Categories (2): ['0', '1']
+  Category                            Count    Percent
+  ------------------------------ ---------- ----------
+  0                                   2,894     31.89%
+  1                                   6,181     68.11%
+
+  CONTINGENCY TABLE (Observed Frequencies)
+----------------------------------------------------------------------
+  dnr                             0            1    Row Total
+  -------------------- ------------ ------------ ------------
+  dnr after sadm                218        2,738        2,956
+  dnr before sadm                38          201          239
+  no dnr                      2,638        3,242        5,880
+  -------------------- ------------ ------------ ------------
+  Col Total                   2,894        6,181        9,075
+
+  EXPECTED FREQUENCIES TABLE
+----------------------------------------------------------------------
+  dnr                             0            1
+  -------------------- ------------ ------------
+  dnr after sadm            942.66      2013.34 
+  dnr before sadm            76.22       162.78 
+  no dnr                   1875.12      4004.88 
+  * = Expected frequency < 5
+
+  ASSUMPTION CHECKS
+----------------------------------------------------------------------
+  [1] Independence of Observations: ASSUMED
+  [2] Categorical variables: CONFIRMED
+  [3] Expected frequencies (Cochran's Rule):
+       Total cells              : 6
+       Cells with expected < 5  : 0
+       Percentage below 5       : 0.0%
+       Minimum expected count   : 76.2166
+       Result: ASSUMPTION SATISFIED
+
+  CHI-SQUARE TEST RESULTS
+----------------------------------------------------------------------
+  Test               : Chi-Square Test of Independence
+  Variable 1         : dnr  (3 categories)
+  Variable 2         : death  (2 categories)
+  Chi-Square (χ²)    : 1301.7317
+  Degrees of Freedom : 2
+  p-value            : 0.0000
+  Total N            : 9,075
+  Result             : SIGNIFICANT (p < 0.05)
+
+  EFFECT SIZE
+----------------------------------------------------------------------
+  Cramer's V                     : 0.3787
+  Effect Size Interpretation     : Medium
+  Formula                        : V = √( χ² / (N × min(r−1, c−1)) )
+
+  MEDICAL & STATISTICAL INTERPRETATION
+----------------------------------------------------------------------
+  There is a statistically significant association between the variables.
+  χ²(2) = 1301.7317, p = 0.0000, Cramer's V = 0.3787
+
+  The Chi-Square Test of Independence tests whether two categorical
+  variables are associated or independent. A significant result indicates
+  that the distribution of one variable differs across categories of the other.
+  Effect size (Cramer's V = 0.3787) is classified as: Medium.
+  Statistical significance does not imply causation.
+  Confounding variables have not been adjusted for in this analysis.
+
+======================================================================
+  END OF REPORT
+======================================================================
