@@ -1,0 +1,57 @@
+======================================================================
+VM-WIT-STATS | VM Medical College Statistical Analysis Toolkit
+======================================================================
+Test              : One-Sample Z-Test
+Date/Time         : 2026-06-20 01:03:21
+Column Tested     : meanbp
+Reference Mean    : 85.0
+======================================================================
+
+DESCRIPTIVE STATISTICS
+----------------------------------------------------------------------
+  N                     : 9104
+  Sample Mean (x̄)      : 84.5464
+  Sample Median         : 77.0000
+  Sample Std Dev        : 27.6877
+  Min                   : 0.0000
+  Max                   : 195.0000
+  Std Dev Used          : 27.6877
+  Source of Std Dev     : Sample std dev (used because population std dev not provided)
+
+ASSUMPTION CHECKS
+----------------------------------------------------------------------
+  Sample Size (n)       : 9104 ✔ (>= 30, CLT applies)
+
+TEST RESULTS
+----------------------------------------------------------------------
+  Reference Mean (μ₀)  : 85.0
+  Sample Mean (x̄)      : 84.5464
+  Standard Error (SE)   : 0.2902
+  Z-Statistic           : -1.5631
+  P-Value (two-tailed)  : 0.118022
+  95% CI for Mean       : [83.9777, 85.1152]
+
+EFFECT SIZE
+----------------------------------------------------------------------
+  Cohen's d             : -0.0164
+  Magnitude             : Negligible
+  Reference: Small=0.2 | Medium=0.5 | Large=0.8
+
+INTERPRETATION
+----------------------------------------------------------------------
+  No statistically significant difference detected (p ≥ 0.05).
+
+  Medical Conclusion:
+  The sample mean meanbp (84.5464) is lower than
+  the reference population mean (85.0).
+  (Z = -1.5631, p = 0.118022)
+
+  [✘] No significant deviation from reference mean.
+
+  HYPOTHESIS:
+  H₀: μ = 85.0 (No difference from reference)
+  H₁: μ ≠ 85.0 (Significant difference from reference)
+  Decision: Fail to Reject H₀
+======================================================================
+END OF REPORT
+======================================================================

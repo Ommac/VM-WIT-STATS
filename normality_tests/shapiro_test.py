@@ -3,7 +3,7 @@ import numpy as np
 from scipy import stats
 
 # Read dataset from CSV file
-df = pd.read_csv("data/sample_data.csv")
+df = pd.read_csv("../data/masterdataset.csv")
 
 # Loop through every column in the dataset
 for col in df.columns:

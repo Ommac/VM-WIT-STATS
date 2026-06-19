@@ -1,0 +1,93 @@
+======================================================================
+  VM-WIT-STATS | VM Medical College Statistical Analysis Toolkit
+  Module  : Kruskal-Wallis Test
+  Dataset : data/support2.csv
+  Date    : 2026-06-20 01:46:12
+======================================================================
+
+  DESCRIPTIVE STATISTICS
+----------------------------------------------------------------------
+  Outcome Variable  : charges
+  Grouping Variable : dzclass
+  Number of Groups  : 4
+
+  Statistic                            ARF/MOSF COPD/CHF/Cirrhos           Cancer             Coma
+  ---------------------------- ---------------- ---------------- ---------------- ----------------
+  Sample Size (n)                         4,123            2,829            1,395              586
+  Mean                              99,187.5715      27,618.7836      13,114.6922      52,156.1103
+  Median                            55,969.0000      11,516.0000       9,073.0000      31,177.0000
+  Std Deviation                    130,397.1011      56,708.5939      12,749.7469      62,769.1229
+  Std Error of Mean                  2,030.7725       1,066.1846         341.3614       2,592.9686
+  Minimum                            2,339.0000       1,314.4490       1,169.0000       2,583.0000
+  Maximum                        1,273,347.0000   1,435,423.0000     133,944.0000     712,554.0000
+  25th Percentile                   27,103.0000       5,872.0000       5,376.0995      15,773.7500
+  75th Percentile                  113,353.0000      26,374.0000      15,943.5000      66,975.2500
+  IQR (Q3 - Q1)                     86,250.0000      20,502.0000      10,567.4005      51,201.5000
+  Skewness                               3.5910           8.9185           3.2016           3.9337
+  Kurtosis                              17.7457         153.7457          17.2467          27.0240
+
+  ASSUMPTION CHECKS
+----------------------------------------------------------------------
+  [1] Independence of Observations: ASSUMED
+  [2] Normality (Shapiro-Wilk Test):
+       Group ARF/MOSF: W=0.6248, p=0.0000 → Non-Normal
+       Group COPD/CHF/Cirrhosis: W=0.3948, p=0.0000 → Non-Normal
+       Group Cancer: W=0.7118, p=0.0000 → Non-Normal
+       Group Coma: W=0.6574, p=0.0000 → Non-Normal
+  [3] Kruskal-Wallis does not require normally distributed data.
+  [4] No equal variance assumption required.
+  [5] Non-parametric alternative to One-Way ANOVA.
+
+  KRUSKAL-WALLIS TEST RESULTS
+----------------------------------------------------------------------
+  Test               : Kruskal-Wallis H Test
+  H Statistic        : 3453.5696
+  Degrees of Freedom : 3
+  p-value            : 0.0000
+  Total N            : 8,933
+  Number of Groups   : 4
+  Result             : SIGNIFICANT (p < 0.05)
+
+  Group                                 n         Median           Mean
+  ------------------------------ -------- -------------- --------------
+  ARF/MOSF                          4,123    55,969.0000    99,187.5715
+  COPD/CHF/Cirrhosis                2,829    11,516.0000    27,618.7836
+  Cancer                            1,395     9,073.0000    13,114.6922
+  Coma                                586    31,177.0000    52,156.1103
+
+  POST-HOC ANALYSIS (Pairwise Mann-Whitney U + Bonferroni Correction)
+----------------------------------------------------------------------
+  Total comparisons      : 6
+  Correction             : Bonferroni
+  Corrected α            : 0.0083
+
+  Group 1              Group 2                 U Statistic      p-value    Bonf. p-value    Significant
+  -------------------- -------------------- -------------- ------------ ---------------- --------------
+  ARF/MOSF             COPD/CHF/Cirrhosis     9,754,923.50       0.0000           0.0000          YES *
+  ARF/MOSF             Cancer                 5,271,714.50       0.0000           0.0000          YES *
+  ARF/MOSF             Coma                   1,578,489.50       0.0000           0.0000          YES *
+  COPD/CHF/Cirrhosis   Cancer                 2,290,545.00       0.0000           0.0000          YES *
+  COPD/CHF/Cirrhosis   Coma                     445,750.50       0.0000           0.0000          YES *
+  Cancer               Coma                     143,461.00       0.0000           0.0000          YES *
+
+  EFFECT SIZE
+----------------------------------------------------------------------
+  Eta Squared (η²H)              : 0.3864
+  Effect Size Interpretation     : Large
+  Formula                        : η²H = (H - k + 1) / (N - k)
+
+  MEDICAL & STATISTICAL INTERPRETATION
+----------------------------------------------------------------------
+  At least one group differs significantly from the others.
+  H(3) = 3453.5696, p = 0.0000, η²H = 0.3864
+
+  The Kruskal-Wallis Test was used as the non-parametric alternative
+  to One-Way ANOVA. It does not require normally distributed data and
+  compares rank distributions across 3 or more independent groups.
+  Effect size (η²H = 0.3864) is classified as: Large.
+  Statistical significance does not imply clinical significance.
+  Confounding variables have not been adjusted for in this analysis.
+
+======================================================================
+  END OF REPORT
+======================================================================

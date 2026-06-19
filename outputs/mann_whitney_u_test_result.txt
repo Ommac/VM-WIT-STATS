@@ -1,0 +1,73 @@
+======================================================================
+  VM-WIT-STATS | VM Medical College Statistical Analysis Toolkit
+  Module  : Mann-Whitney U Test
+  Dataset : data/support2.csv
+  Date    : 2026-06-20 01:27:32
+======================================================================
+
+  DESCRIPTIVE STATISTICS
+----------------------------------------------------------------------
+  Outcome Variable  : charges
+  Grouping Variable : death
+
+  Statistic                                     0                  1
+  ---------------------------- ------------------ ------------------
+  Sample Size (n)                            2845               6088
+  Mean                                62,158.3036        58,985.2166
+  Median                              27,244.0000        23,886.0000
+  Std Deviation                      103,077.8817       102,440.4696
+  Std Error of Mean                    1,932.5216         1,312.9078
+  Minimum                              1,573.0000         1,169.0000
+  Maximum                          1,435,423.0000     1,273,347.0000
+  25th Percentile                     10,217.0000         9,541.7500
+  75th Percentile                     69,096.0000        62,664.7500
+  IQR (Q3 - Q1)                       58,879.0000        53,123.0000
+  Skewness                                 4.6862             4.6882
+  Kurtosis                                33.4095            31.5253
+
+  ASSUMPTION CHECKS
+----------------------------------------------------------------------
+  [1] Independence of Observations: ASSUMED
+  [2] Normality (Shapiro-Wilk Test):
+       Group 0: W=0.5444, p=0.0000 → Non-Normal
+       Group 1: n > 5000: Shapiro-Wilk not computed (large sample)
+  [3] Mann-Whitney U Test does not require normally distributed data.
+  [4] No equal variance assumption required.
+
+  MANN-WHITNEY U TEST RESULTS
+----------------------------------------------------------------------
+  Test               : Mann-Whitney U Test (Two-Tailed)
+  Null Hypothesis    : Distributions equal across both groups
+  Significance Level : α = 0.05
+  U Statistic (0)  : 9025311.0000
+  U Statistic (1)  : 8295049.0000
+  Z Score (approx.)  : 3.2154
+  p-value            : 0.0013
+  Median (0)       : 27,244.0000
+  Median (1)       : 23,886.0000
+  Sample Size (0)  : 2,845
+  Sample Size (1)  : 6,088
+  Total Sample Size  : 8,933
+  Result             : SIGNIFICANT (p < 0.05)
+
+  EFFECT SIZE
+----------------------------------------------------------------------
+  Rank-Biserial Correlation (r)  : -0.0422
+  Effect Size Interpretation     : Negligible
+  Hodges-Lehmann Estimator       : 1491.0000
+  95% CI                         : [1490.9872, 1491.0128]
+
+  INTERPRETATION
+----------------------------------------------------------------------
+  Statistically significant difference detected between groups.
+  (U = 9025311.00, p = 0.0013, r = -0.0422)
+
+  The Mann-Whitney U Test was used as the non-parametric alternative
+  to the Independent T-Test. It is appropriate when data is not
+  normally distributed and compares rank-based distributions.
+  Statistical significance does not imply clinical significance.
+  Effect size (r = -0.0422) is classified as: Negligible.
+
+======================================================================
+  END OF REPORT
+======================================================================
