@@ -1,10 +1,3 @@
-# ======================================================================
-# VM-WIT-STATS | VM Medical College Statistical Analysis Toolkit
-# Module      : Mann-Whitney U Test
-# File        : hypothesis_tests/mann_whitney_u_test.py
-# Description : Non-parametric test for comparing two independent groups.
-#               Suitable when data is not normally distributed.
-# ======================================================================
 
 import os
 import sys
@@ -18,9 +11,6 @@ from scipy.stats import mannwhitneyu, norm
 
 warnings.filterwarnings("ignore")
 
-# ======================================================================
-# CONSTANTS
-# ======================================================================
 
 SEPARATOR  = "=" * 70
 SEPARATOR2 = "-" * 70
