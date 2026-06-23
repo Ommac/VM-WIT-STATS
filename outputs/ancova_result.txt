@@ -1,0 +1,189 @@
+========================================================================
+VM-WIT-STATS | VM Medical College — Medical Statistics Toolkit
+ANALYSIS OF COVARIANCE (ANCOVA)
+========================================================================
+Dependent Variable : charges
+Grouping Variable  : sex  (2 groups: female, male)
+Covariates (2)      : age, meanbp
+Sample Size (n)    : 8932
+Model              : charges ~ sex + age + meanbp
+Sums of Squares    : Type III (sum/deviation contrasts applied)
+
+========================================================================
+1. DESCRIPTIVE STATISTICS
+========================================================================
+
+  Dependent Variable: charges (unadjusted, per group)
+
+  Group                  N       Mean     Median         SD         SE      Min      Max       Q1       Q3      IQR
+  ----------------------------------------------------------------------------------------------------
+  female              3898  61806.592  24641.500 109850.805   1759.472 1212.000 1435423.000 10090.250 65937.250 55847.000
+  male                5034  58587.169  25120.500  96701.762   1362.943 1169.000 1273347.000 9470.250 63244.750 53774.500
+
+  Covariates (overall sample):
+  Covariate                  N       Mean     Median         SD         SE      Min      Max
+  -------------------------------------------------------------------------------------
+  age                     8932     62.696     64.872     15.579      0.165   18.042  101.848
+  meanbp                  8932     84.511     77.000     27.573      0.292    0.000  195.000
+
+========================================================================
+2. ASSUMPTION CHECKS
+========================================================================
+
+  [A] HOMOGENEITY OF REGRESSION SLOPES  ← CRITICAL ANCOVA ASSUMPTION
+      Tests whether the covariate-DV relationship is the same in all groups.
+      If violated, ANCOVA adjusted means are not interpretable.
+
+      Overall test:
+        F-statistic   : 3.1860
+        df (numerator) : 2
+        p-value        : 0.0414
+      Result: Homogeneity of regression slopes: VIOLATED (F = 3.186, p = 0.0414). The relationship between the covariate(s) and charges differs significantly across groups. ANCOVA adjusted means may not be meaningful. Consider the Johnson-Neyman technique or separate within-group regressions.
+
+      Per-covariate interaction breakdown:
+      Covariate                          F      p-value Flag
+      ------------------------------------------------------------
+      age                           3.9719       0.0463  ⚠ VIOLATION
+      meanbp                        2.1533       0.1423  OK
+
+      ⚠ WARNING: ANCOVA ASSUMPTION VIOLATED.
+        Adjusted means below are reported but must be interpreted
+        with extreme caution. Consider stratified analyses or
+        the Johnson-Neyman technique for interacting covariates.
+
+  [B] RESIDUAL NORMALITY — Lilliefors (KS with estimated parameters)
+      Statistic  : 0.2268
+      p-value    : < 0.001
+      Result     : Lilliefors (KS with estimated parameters): Residuals deviate from normality (p ≤ 0.05). OLS estimates remain unbiased, but consider robust inference for small samples. NOTE: n > 5000 — normality tests detect trivially small deviations. OLS inference is protected by the CLT.
+
+  [C] HOMOGENEITY OF VARIANCE — Levene's Test
+      W-statistic : 4.5544
+      p-value     : 0.0329
+      Result      : Levene's test: Heterogeneity of variance detected (p ≤ 0.05). Group variances differ significantly. ANCOVA is moderately robust to variance heterogeneity when groups are balanced, but interpret results with caution in unbalanced designs.
+
+  [D] LINEARITY — DV vs Each Covariate
+      age: weak negative linear association with charges (r = -0.168, p = < 0.001). No significant quadratic component (F = 2.937, p = 0.0866): linearity supported.
+      meanbp: weak negative linear association with charges (r = -0.047, p = < 0.001). Quadratic term significant (F = 25.216, p = < 0.001): non-linear relationship possible. Consider polynomial or log transformation.
+
+  [E] OUTLIER DETECTION — Studentized Residuals (two-tier)
+      Strong outliers  (|SR| > 3)     : 190
+      Moderate concern (2 < |SR| ≤ 3) : 160
+      Strong outlier indices (0-based): [np.int64(13), np.int64(21), np.int64(28), np.int64(71), np.int64(78), np.int64(87), np.int64(94), np.int64(130), np.int64(134), np.int64(175)] ... (190 total; first 10 shown)
+      ⚠ STRONG OUTLIERS: Verify clinical data accuracy. Do not remove without documented justification.
+      Moderate concern indices         : [np.int64(16), np.int64(41), np.int64(44), np.int64(55), np.int64(61), np.int64(72), np.int64(82), np.int64(163), np.int64(168), np.int64(259)] ... (160 total; first 10 shown)
+      Inspect individually — unusual but not definitive outliers.
+
+  [F] INFLUENCE — Cook's Distance (threshold = 4/n = 0.0004)
+      Influential observations : 350
+      Indices (0-based): [np.int64(13), np.int64(21), np.int64(28), np.int64(41), np.int64(44), np.int64(55), np.int64(71), np.int64(72), np.int64(78), np.int64(87)] ... (350 total; first 10 shown)
+      These observations substantially affect the model. Verify data accuracy.
+
+========================================================================
+3. ANCOVA TABLE — TYPE III SUMS OF SQUARES
+========================================================================
+
+  Type III SS: each effect tested after accounting for all other effects.
+  Sum (deviation) contrasts applied to ensure reference-level-invariant SS.
+
+  Source                                       SS     df             MS          F      p-value   Partial η² Effect
+  --------------------------------------------------------------------------------------------------------------
+  C(sex, Sum)                      51278454136.4946      1 51278454136.4946     5.0234       0.0250       0.0006  Negligible effect
+  age                              2746932745704.1069      1 2746932745704.1069   269.0981      < 0.001       0.0293  Small effect
+  meanbp                           276005857936.7809      1 276005857936.7809    27.0384      < 0.001       0.0030  Negligible effect
+  Residual                         91136350798590.4375   8928 10207924596.6163        N/A          N/A          N/A  
+
+========================================================================
+4. MODEL PERFORMANCE
+========================================================================
+
+  R²                      : 0.0316  (3.16% of variance in charges explained)
+  Adjusted R²             : 0.0313
+  Residual Standard Error : 101034.2744  (units of charges)
+  AIC                     : 231202.6314
+  BIC                     : 231231.0210
+  df (residual)           : 8928
+
+========================================================================
+5. ADJUSTED (ESTIMATED MARGINAL) MEANS
+========================================================================
+
+  Adjusted means: predicted group means with all covariates at their grand mean.
+    age grand mean = 62.6961
+    meanbp grand mean = 84.5106
+
+  Group                  Adjusted Mean         SE   95% CI Lower   95% CI Upper
+  ----------------------------------------------------------------------------
+  female                    62717.7323  1619.1620     59543.8027     65891.6618
+  male                      57881.6421  1424.6229     55089.0539     60674.2302
+
+========================================================================
+6. MEDICAL & STATISTICAL INTERPRETATION
+========================================================================
+
+  Group Effect (sex):
+
+  Covariate Effects:
+    age: significant covariate effect (F = 269.098, p = < 0.001, partial η² = 0.0293).
+    meanbp: significant covariate effect (F = 27.038, p = < 0.001, partial η² = 0.0030).
+
+  Adjusted Means Summary:
+    Covariate grand means used: age=62.696, meanbp=84.511
+    female: adjusted charges = 62717.732
+    male: adjusted charges = 57881.642
+
+  Statistical vs Clinical Significance:
+    A statistically significant group effect does not automatically imply
+    clinical importance. Evaluate adjusted mean differences relative to
+    clinically meaningful thresholds for the outcome measured.
+    Partial η² quantifies effect size; clinical relevance requires domain expertise.
+
+  Large-Sample Note:
+    In large samples (n > 200 per group), trivially small group differences
+    may reach statistical significance. Always interpret adjusted mean
+    differences and confidence intervals alongside p-values.
+
+========================================================================
+7. LIMITATIONS
+========================================================================
+
+
+  1. CAUSALITY
+     ANCOVA does not establish causation. Covariate adjustment reduces
+     confounding but does not eliminate it. Unmeasured confounders may remain.
+
+  2. RESIDUAL CONFOUNDING
+     Covariates are measured with error. Imperfect covariate measurement leads
+     to incomplete adjustment (regression dilution bias).
+
+  3. ASSUMPTION VIOLATIONS
+     If homogeneity of regression slopes is violated, adjusted means are not
+     interpretable as single summary statistics. Group differences then depend
+     on the covariate value and must be qualified accordingly.
+
+  4. OUTLIER SENSITIVITY
+     OLS-based ANCOVA is sensitive to extreme observations. Influential points
+     should be investigated clinically before any exclusion.
+
+  5. GROUP IMBALANCE
+     Unequal group sizes amplify sensitivity to variance heterogeneity and can
+     affect Type I error rates. Type III SS partially addresses this but does
+     not eliminate all imbalance effects.
+
+  6. COVARIATE SELECTION
+     Including too many covariates relative to sample size risks overfitting.
+     Covariates should be pre-specified based on biological plausibility,
+     not selected post-hoc based on significance.
+
+  7. GENERALIZABILITY
+     Results generalise only to populations similar to the study sample
+     in terms of the observed covariate range.
+
+  8. EXTRAPOLATION
+     Adjusted means are meaningful only within the observed range of covariate
+     values. Extrapolation beyond this range is unjustifiable.
+    
+========================================================================
+END OF REPORT — VM-WIT-STATS | VM Medical College
+For academic publication, verify all assumptions before reporting.
+This output is research-grade and intended for trained professionals.
+========================================================================

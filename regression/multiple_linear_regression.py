@@ -94,6 +94,23 @@ def _dual_print(lines: list, file_handle) -> None:
         file_handle.write(line + "\n")
 
 
+def _sanitize_indices(indices, max_show: int = 20) -> str:
+    """
+    Format observation indices for publication-safe reporting.
+    Converts NumPy integer scalars to native Python int and truncates long lists.
+    """
+    if indices is None:
+        return "none"
+    arr = np.asarray(indices).ravel()
+    if arr.size == 0:
+        return "none"
+    clean = [int(i) for i in arr.tolist()]
+    n = len(clean)
+    if n <= max_show:
+        return str(clean)
+    return f"{clean[:max_show]} ... ({n} total; showing first {max_show})"
+
+
 # ==============================================================================
 # FILE LOADING
 # ==============================================================================
@@ -607,18 +624,40 @@ def check_linearity_reset(result) -> dict:
     """
     try:
         reset_result = linear_reset(result, power=3, use_f=True)
-        f_stat = float(reset_result.fvalue)
-        p_val = float(reset_result.pvalue)
+
+        # Cross-version extraction (statsmodels 0.11–0.14+)
+        if hasattr(reset_result, "fvalue"):
+            f_stat = float(reset_result.fvalue)
+            p_val = float(
+                getattr(reset_result, "f_pvalue", getattr(reset_result, "pvalue", np.nan))
+            )
+        elif isinstance(reset_result, (tuple, list)) and len(reset_result) >= 2:
+            f_stat = float(reset_result[0])
+            p_val = float(reset_result[1])
+        else:
+            raise TypeError(f"Unexpected linear_reset return type: {type(reset_result)}")
+
+        n = int(getattr(result, "nobs", np.nan))
+        large_n_caveat = ""
+        if not np.isnan(n) and n > 5000:
+            large_n_caveat = (
+                " NOTE: With large n, RESET has high power and may flag statistically significant "
+                "but practically negligible departures from linearity. Evaluate effect plots and "
+                "clinical relevance, not only the p-value."
+            )
+
         if p_val > 0.05:
             interp = (
                 "No significant evidence of linearity violation (p > 0.05). "
                 "Linearity assumption is supported (tested against quadratic and cubic departures)."
+                f"{large_n_caveat}"
             )
         else:
             interp = (
                 "Significant linearity violation detected (p ≤ 0.05). "
                 "The model may be misspecified for quadratic or cubic relationships. "
                 "Consider non-linear transformations, interaction terms, or polynomial terms."
+                f"{large_n_caveat}"
             )
         return {"F_statistic": f_stat, "p_value": p_val, "interpretation": interp}
     except Exception as e:
@@ -665,9 +704,12 @@ def check_residual_normality(residuals: np.ndarray) -> dict:
             test_name = "Shapiro-Wilk"
         else:
             # Lilliefors is the correct KS-based test when parameters are
-            # estimated from the data. pvalmethod="approx" uses the
-            # asymptotic approximation, valid for n > 2000.
-            stat, p_val = sm_lilliefors(residuals, dist="norm", pvalmethod="approx")
+            # estimated from the data. pvalmethod="approx" (statsmodels >= 0.14)
+            # uses the asymptotic approximation, valid for n > 2000.
+            try:
+                stat, p_val = sm_lilliefors(residuals, dist="norm", pvalmethod="approx")
+            except TypeError:
+                stat, p_val = sm_lilliefors(residuals, dist="norm")
             test_name = "Lilliefors (KS with estimated parameters)"
 
         large_n_caveat = ""
@@ -724,16 +766,28 @@ def check_homoscedasticity(result, X_const, y) -> dict:
     try:
         lm_stat, lm_p, f_stat, f_p = het_breuschpagan(result.resid, X_const)
         heteroscedastic = lm_p <= 0.05
+        n = int(getattr(result, "nobs", len(result.resid)))
+
+        large_n_caveat = ""
+        if n > 5000:
+            large_n_caveat = (
+                " NOTE: With large n, Breusch-Pagan is sensitive to minor heteroscedasticity "
+                "that may not materially affect inference. Compare OLS and robust standard errors "
+                "and focus on practical impact, not only statistical significance."
+            )
+
         if not heteroscedastic:
             interp = (
                 "Breusch-Pagan: No significant heteroscedasticity detected (p > 0.05). "
                 "Homoscedasticity assumption is supported."
+                f"{large_n_caveat}"
             )
         else:
             interp = (
                 "Breusch-Pagan: Significant heteroscedasticity detected (p ≤ 0.05). "
                 "Standard OLS standard errors are invalid. HC3 robust standard errors "
                 "will be computed and reported."
+                f"{large_n_caveat}"
             )
         return {
             "LM_statistic": float(lm_stat),
@@ -1216,18 +1270,25 @@ def generate_report(
     out.append("")
 
     # E. Outlier Detection — two tiers
+    _idx_label = "analysis dataset row index (after listwise deletion)"
     out.append("  [E] OUTLIER DETECTION — Studentized Residuals (two-tier)")
-    out.append(f"      Strong outliers  (|SR| > 3)       : {diag_res['n_outliers']}")
-    out.append(f"      Moderate concern (2 < |SR| ≤ 3)   : {diag_res['n_moderate_outliers']}")
+    out.append(f"      Strong outliers  (|SR| > 3)       : {int(diag_res['n_outliers'])}")
+    out.append(f"      Moderate concern (2 < |SR| ≤ 3)   : {int(diag_res['n_moderate_outliers'])}")
     if diag_res["n_outliers"] > 0:
-        out.append(f"      Strong outlier indices (0-based)  : {list(diag_res['outlier_indices'])}")
+        out.append(
+            f"      Strong outlier {_idx_label}: "
+            f"{_sanitize_indices(diag_res['outlier_indices'])}"
+        )
         out.append(
             "      ⚠ STRONG OUTLIERS DETECTED: These observations fall beyond 3 studentized SDs. "
             "Verify clinical data accuracy for each flagged case. "
             "Do not remove without documented clinical justification."
         )
     if diag_res["n_moderate_outliers"] > 0:
-        out.append(f"      Moderate concern indices (0-based): {list(diag_res['moderate_outlier_indices'])}")
+        out.append(
+            f"      Moderate concern {_idx_label}: "
+            f"{_sanitize_indices(diag_res['moderate_outlier_indices'])}"
+        )
         out.append(
             "      Moderate concern: These observations fall in the 2–3 studentized SD range. "
             "Inspect individually — they are unusual but not definitive outliers."
@@ -1238,9 +1299,12 @@ def generate_report(
 
     # F. Leverage
     out.append(f"  [F] LEVERAGE — Hat Values (threshold = 2(k+1)/n = {diag_res['leverage_cutoff']:.4f})")
-    out.append(f"      High-leverage observations : {diag_res['n_high_leverage']}")
+    out.append(f"      High-leverage observations : {int(diag_res['n_high_leverage'])}")
     if diag_res["n_high_leverage"] > 0:
-        out.append(f"      Observation indices (0-based): {list(diag_res['high_leverage_indices'])}")
+        out.append(
+            f"      Observation {_idx_label}: "
+            f"{_sanitize_indices(diag_res['high_leverage_indices'])}"
+        )
         out.append(
             "      High-leverage points have unusual predictor patterns and may "
             "disproportionately influence the model."
@@ -1251,9 +1315,12 @@ def generate_report(
 
     # G. Influence
     out.append(f"  [G] INFLUENCE — Cook's Distance (threshold = 4/n = {diag_res['cooks_cutoff']:.4f})")
-    out.append(f"      Influential observations : {diag_res['n_influential']}")
+    out.append(f"      Influential observations : {int(diag_res['n_influential'])}")
     if diag_res["n_influential"] > 0:
-        out.append(f"      Observation indices (0-based): {list(diag_res['influential_indices'])}")
+        out.append(
+            f"      Observation {_idx_label}: "
+            f"{_sanitize_indices(diag_res['influential_indices'])}"
+        )
         out.append(
             "      These observations substantially alter the regression coefficients "
             "when excluded. Verify clinical data accuracy."
