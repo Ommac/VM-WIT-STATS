@@ -1,0 +1,62 @@
+======================================================================
+  VM-WIT-STATS | VM Medical College Statistical Analysis Toolkit
+  Module  : Shapiro-Wilk Normality Test
+  Dataset : data/support2.csv
+  Column  : charges
+  Date    : 2026-06-22 01:17:34
+======================================================================
+
+  DESCRIPTIVE STATISTICS
+----------------------------------------------------------------------
+  Variable              : charges
+  Sample Size (n)       : 8,933
+  Mean                  : 59,995.7878
+  Median                : 25,024.0000
+  Std Deviation         : 102,648.7782
+  Std Error of Mean     : 1,086.0632
+  Minimum               : 1,169.0000
+  Maximum               : 1,435,423.0000
+  25th Percentile (Q1)  : 9,740.0000
+  75th Percentile (Q3)  : 64,598.0000
+  IQR (Q3 - Q1)         : 54,858.0000
+  Skewness              : 4.6864
+  Kurtosis (excess)     : 32.1255
+
+  SHAPIRO-WILK TEST RESULTS
+----------------------------------------------------------------------
+  H₀: Data is normally distributed.
+  H₁: Data is NOT normally distributed.
+  Significance level (α): 0.05
+
+  Test Status : NOT ASSESSED (n > 5000)
+
+  Shapiro-Wilk Test was not performed because n = 8,933 exceeds the recommended maximum of 5,000. For large samples, trivially small deviations from normality will produce significant p-values that have no practical meaning. Please use Anderson-Darling or Kolmogorov-Smirnov tests, and supplement with Q-Q plots and histograms.
+
+  ALTERNATIVES FOR LARGE SAMPLES:
+    1. Anderson-Darling Test   (normality_tests/anderson_test.py)
+    2. Kolmogorov-Smirnov Test (normality_tests/ks_test.py)
+    3. Q-Q Plot (visual method)
+
+  INTERPRETATION
+----------------------------------------------------------------------
+  Test was not performed: NOT ASSESSED (n > 5000)
+  No interpretation available.
+
+  MEDICAL RECOMMENDATIONS
+----------------------------------------------------------------------
+  Run normality test first to receive recommendations.
+
+  LIMITATIONS
+----------------------------------------------------------------------
+  • p > 0.05 does NOT prove normality; it only fails to reject H₀.
+  • p ≤ 0.05 does not mean the data is drastically non-normal.
+  • Small samples (n < 20): low power — non-significance ≠ normality.
+  • Large samples (n > 200): even trivial deviations may be significant.
+  • Shapiro-Wilk is validated for 3 ≤ n ≤ 5000 only.
+  • Always supplement with visual methods: histogram, Q-Q plot, boxplot.
+  • Parametric tests are often robust for n ≥ 30 (Central Limit Theorem).
+  • Multiple testing: apply Bonferroni correction when testing many columns.
+
+======================================================================
+  END OF REPORT
+======================================================================

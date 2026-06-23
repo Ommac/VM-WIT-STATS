@@ -1,0 +1,96 @@
+======================================================================
+  VM-WIT-STATS | VM Medical College Statistical Analysis Toolkit
+  Module  : Lilliefors Test (Normality)
+  Dataset : data/support2.csv
+  Date    : 2026-06-22 10:10:24
+======================================================================
+
+  DESCRIPTIVE STATISTICS
+----------------------------------------------------------------------
+  Variable : temp
+
+  Statistic                                     Value
+  ------------------------------ --------------------
+  Sample Size (n)                               9,104
+  Mean                                        37.1033
+  Median                                      36.6953
+  Std Deviation                                1.2518
+  Std Error of Mean                            0.0131
+  Minimum                                     31.6992
+  Maximum                                     41.6953
+  25th Percentile                             36.1953
+  75th Percentile                             38.1953
+  IQR (Q3 - Q1)                                2.0000
+  Skewness                                     0.3131
+  Kurtosis                                    -0.4538
+
+  ASSUMPTION CHECKS
+----------------------------------------------------------------------
+  [1] Continuous numeric variable   : CONFIRMED
+  [2] Parameters estimated from sample : CONFIRMED
+      Estimated Mean : 37.1033
+      Estimated SD   : 1.2518
+  [3] Standard KS not used          : CORRECT (parameters estimated)
+      Standard KS inflates p-values when parameters are estimated.
+      Lilliefors corrected critical values used instead.
+  [4] Independence of observations   : ASSUMED
+  [5] Sample size                   : n = 9,104
+       NOTE: Large sample — see large-sample interpretation.
+
+  LILLIEFORS TEST RESULTS
+----------------------------------------------------------------------
+  Test                    : Lilliefors Test (Normality)
+  Variable                : temp
+  Null Hypothesis         : Data follows Normal distribution
+                            (mean and SD estimated from sample)
+  Alt. Hypothesis         : Data does NOT follow Normal distribution
+  Lilliefors D Statistic  : 0.1378
+  p-value                 : 0.0010
+  Sample Size (n)         : 9,104
+  Estimated Mean          : 37.1033
+  Estimated SD            : 1.2518
+  p-value Boundary Note   : p is at Lilliefors table boundary.
+                            Reported value is closest tabulated bound.
+  Result                  : REJECT NORMALITY (p ≤ 0.05)
+
+  D STATISTIC MAGNITUDE
+----------------------------------------------------------------------
+  D = 0.1378 → Moderate — noticeable departure from Normality.
+
+  LARGE SAMPLE INTERPRETATION
+----------------------------------------------------------------------
+  n = 9,104. Large samples give the Lilliefors Test high power to
+  detect trivially small deviations that are statistically significant
+  but practically irrelevant for test selection.
+  A rejected normality test at large n does NOT automatically mean
+  parametric tests are inappropriate.
+  Consider: D statistic magnitude, skewness, kurtosis, and the
+  Central Limit Theorem (robust for parametric tests at large n).
+
+  RECOMMENDED STATISTICAL TESTS
+----------------------------------------------------------------------
+  Non-normality detected. Non-parametric tests recommended.
+    Two-Group Comparison   : Mann-Whitney U Test
+    Paired Comparison      : Wilcoxon Signed-Rank Test
+    Multiple Groups        : Kruskal-Wallis Test
+    Repeated Measures      : Friedman Test
+    Correlation            : Spearman Correlation
+  With n = 9,104, parametric tests may still be appropriate
+  if deviation is minor (small D, low skewness).
+
+  MEDICAL & STATISTICAL INTERPRETATION
+----------------------------------------------------------------------
+  The Lilliefors Test provides evidence against normality.
+  D = 0.1378, p = 0.0010. Reject H0 at α = 0.05.
+  Large sample (n = 9,104): interpret D magnitude alongside p-value.
+
+  The Lilliefors Test uses corrected critical values for the case
+  where mean and SD are estimated from the sample. Standard KS
+  must not be used for normality testing in this scenario.
+  Statistical significance does not automatically indicate that
+  parametric tests are inappropriate — sample size, D magnitude,
+  and distributional characteristics should all be considered.
+
+======================================================================
+  END OF REPORT
+======================================================================

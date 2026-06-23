@@ -1,0 +1,88 @@
+======================================================================
+  VM-WIT-STATS | VM Medical College Statistical Analysis Toolkit
+  Module  : Wilcoxon Signed-Rank Test
+  Dataset : data/wilcoxon.csv
+  Date    : 2026-06-22 00:36:08
+======================================================================
+
+  DESCRIPTIVE STATISTICS
+----------------------------------------------------------------------
+  Subject ID Column : Patient_ID
+  Measurement 1     : Before  (Pre / Before)
+  Measurement 2     : After  (Post / After)
+  Difference        : After − Before  (Post − Pre)
+  Paired Subjects   : 20
+
+  Statistic                                Before              After     After − Before
+  ---------------------------- ------------------ ------------------ ------------------
+  Sample Size (n)                              20                 20                 20
+  Mean                                   180.8000           162.1500           -18.6500
+  Median                                 180.5000           162.5000           -18.0000
+  Std Deviation                            5.7455             5.3437             1.0400
+  Std Error of Mean                        1.2847             1.1949             0.2325
+  Minimum                                170.0000           150.0000           -20.0000
+  Maximum                                190.0000           170.0000           -17.0000
+  25th Percentile                        176.7500           158.7500           -20.0000
+  75th Percentile                        185.2500           166.2500           -18.0000
+  IQR (Q3 - Q1)                            8.5000             7.5000             2.0000
+  Skewness                                -0.1263            -0.4718            -0.4529
+  Kurtosis                                -0.9304            -0.4433            -1.4464
+
+  ASSUMPTION CHECKS
+----------------------------------------------------------------------
+  [1] Paired Observations           : CONFIRMED (20 pairs)
+  [2] Same Subjects Measured Twice  : ASSUMED
+  [3] Zero Differences (excluded)   : 0
+  [4] Normality of Differences (Shapiro-Wilk):
+       W Stat : 0.7023
+       p-value: 0.0000
+       Result : Non-Normal
+       NOTE: Wilcoxon Signed-Rank Test does not require normally
+       distributed data. These results are provided for documentation
+       purposes and to inform method selection only.
+  [5] Non-parametric alternative to Paired T-Test.
+  [6] Listwise deletion applied for missing values.
+
+  WILCOXON SIGNED-RANK TEST RESULTS
+----------------------------------------------------------------------
+  Test                       : Wilcoxon Signed-Rank Test (Two-Sided)
+  Measurement 1              : Before  (Pre / Before)
+  Measurement 2              : After  (Post / After)
+  W Statistic                : 0.0000
+  Z Score (approx.)          : -3.9199
+  p-value (two-sided)        : 0.0001
+  Total Paired Observations  : 20
+  Non-zero Differences Used  : 20
+  Zero Differences Excluded  : 0
+  Median Before                : 180.5000
+  Median After                 : 162.5000
+  Median Difference          : -18.0000
+  Mean   Difference          : -18.6500
+  Result                     : SIGNIFICANT (p < 0.05)
+
+  EFFECT SIZE
+----------------------------------------------------------------------
+  Effect Size (r)                : -0.8765
+  Effect Size Interpretation     : Large
+  Formula                        : r = Z / √N
+  Z Score                        : -3.9199
+  N (non-zero differences)       : 20
+  Direction                      : Measurement 2 ('After') tends to be LOWER than Measurement 1 ('Before')
+  (Direction based on median difference = -18.0000)
+
+  MEDICAL & STATISTICAL INTERPRETATION
+----------------------------------------------------------------------
+  A statistically significant difference was detected between paired measurements.
+  W = 0.0000, Z ≈ -3.9199, p = 0.0001, r = -0.8765
+
+  The Wilcoxon Signed-Rank Test was used as the non-parametric alternative
+  to the Paired T-Test. It does not require normally distributed differences
+  and is robust to outliers and skewed distributions.
+  Median difference (After − Before) = -18.0000
+  Effect size r = -0.8765 (Large).
+  Statistical significance does not imply clinical importance.
+  Confounders and covariates have not been adjusted for.
+
+======================================================================
+  END OF REPORT
+======================================================================

@@ -1,0 +1,79 @@
+======================================================================
+  VM-WIT-STATS | VM Medical College Statistical Analysis Toolkit
+  Module  : Anderson-Darling Normality Test
+  Dataset : data/support2.csv
+  Column  : temp
+  Date    : 2026-06-22 09:53:46
+======================================================================
+
+  DESCRIPTIVE STATISTICS
+----------------------------------------------------------------------
+  Variable              : temp
+  Sample Size (n)       : 9,104
+  Mean                  : 37.1033
+  Median                : 36.6953
+  Std Deviation         : 1.2518
+  Std Error of Mean     : 0.0131
+  Minimum               : 31.6992
+  Maximum               : 41.6953
+  25th Percentile (Q1)  : 36.1953
+  75th Percentile (Q3)  : 38.1953
+  IQR (Q3 - Q1)         : 2.0000
+  Skewness              : 0.3131
+  Kurtosis (excess)     : -0.4538
+
+  ANDERSON-DARLING TEST RESULTS
+----------------------------------------------------------------------
+  H₀: Data follows a normal distribution.
+  H₁: Data does NOT follow a normal distribution.
+  Primary significance level (α): 0.05
+
+  A² Statistic            : 170.636399
+  Interpolated p-value    : ≤ 0.01  (bounded to [0.01, 0.15])
+  p-value note            : p ≤ 0.01 (reported as 0.01): true p-value is below the lower bound of scipy's interpolation table. The actual p-value is ≤ 0.01.
+
+  CRITICAL VALUE TABLE
+      Significance Level    Critical Value          A²  Decision
+  ----------------------  ----------------  ----------  --------------------------------
+                   15.0%            0.5610    170.6364  REJECT H₀
+                   10.0%            0.6310    170.6364  REJECT H₀
+                    5.0%            0.7520    170.6364  REJECT H₀ [PRIMARY]
+                    2.5%            0.8730    170.6364  REJECT H₀
+                    1.0%            1.0350    170.6364  REJECT H₀
+
+  FINAL VERDICT : NON-NORMAL — Reject H₀ at α=1% (strong evidence against normality)
+
+  [LARGE SAMPLE NOTE] n = 9,104. Rejection at α=5% may reflect a trivial
+  departure from normality. Visual inspection is strongly recommended.
+
+  INTERPRETATION
+----------------------------------------------------------------------
+  Anderson-Darling provides evidence against normality at α=5%.
+  A² = 170.636399 exceeds the critical value at the 5% level.
+  'temp' does not appear to follow a normal distribution.
+  Non-parametric alternatives should be considered.
+
+  MEDICAL RECOMMENDATIONS
+----------------------------------------------------------------------
+  Recommended NON-PARAMETRIC tests:
+    • Mann-Whitney U Test        — hypothesis_tests/mann_whitney_u_test.py
+    • Wilcoxon Signed-Rank Test  — hypothesis_tests/wilcoxon_signed_rank_test.py
+    • Kruskal-Wallis Test        — hypothesis_tests/kruskal_wallis_test.py
+    • Friedman Test              — hypothesis_tests/friedman_test.py
+    • Spearman Correlation       — correlation/spearman.py
+
+  LIMITATIONS
+----------------------------------------------------------------------
+  • Anderson-Darling decision is based on critical value comparison, NOT p-value.
+  • The interpolated p-value is bounded to [0.01, 0.15] by scipy's table.
+  • Anderson-Darling weights tails heavily — sensitive to outliers.
+  • Small samples (n < 20): low power; non-rejection ≠ normality.
+  • Large samples (n > 200): may reject for trivially small deviations.
+  • Parametric tests are often robust for n ≥ 30 (Central Limit Theorem).
+  • Always supplement with visual methods: histogram, Q-Q plot.
+  • Consider also: Shapiro-Wilk (shapiro_test.py), KS Test (ks_test.py).
+  • Multiple testing: apply Bonferroni correction when testing many columns.
+
+======================================================================
+  END OF REPORT
+======================================================================

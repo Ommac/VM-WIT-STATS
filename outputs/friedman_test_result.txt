@@ -1,0 +1,97 @@
+======================================================================
+  VM-WIT-STATS | VM Medical College Statistical Analysis Toolkit
+  Module  : Friedman Test
+  Dataset : data/friedman.csv
+  Date    : 2026-06-21 03:36:31
+======================================================================
+
+  DESCRIPTIVE STATISTICS
+----------------------------------------------------------------------
+  Subject ID Column    : Patient_ID
+  Repeated Measures    : ['Baseline', 'Month1', 'Month3', 'Month6']
+  Number of Subjects   : 30
+  Number of Measures   : 4
+
+  Statistic                          Baseline         Month1         Month3         Month6
+  ---------------------------- -------------- -------------- -------------- --------------
+  Sample Size (n)                          30             30             30             30
+  Mean                               181.0333       171.6667       157.0667       143.8000
+  Median                             181.0000       171.0000       157.0000       143.5000
+  Std Deviation                        5.9798         5.2544         5.3430         4.6416
+  Std Error of Mean                    1.0917         0.9593         0.9755         0.8474
+  Minimum                            170.0000       162.0000       148.0000       135.0000
+  Maximum                            192.0000       182.0000       168.0000       153.0000
+  25th Percentile                    177.0000       168.0000       153.0000       140.2500
+  75th Percentile                    185.7500       175.7500       161.5000       147.7500
+  IQR (Q3 - Q1)                        8.7500         7.7500         8.5000         7.5000
+  Skewness                            -0.1044         0.1044         0.0741         0.0390
+  Kurtosis                            -0.9431        -0.6524        -0.9457        -0.9600
+
+  ASSUMPTION CHECKS
+----------------------------------------------------------------------
+  [1] Repeated Measures Design     : CONFIRMED (30 subjects, 4 measures)
+  [2] Minimum 3 Repeated Measures  : CONFIRMED (4 measures)
+  [3] Dependent Observations       : ASSUMED (same subjects)
+  [4] Normality (Shapiro-Wilk):
+       Baseline: W=0.9768, p=0.7366 → Non-Normal
+       Month1: W=0.9793, p=0.8076 → Non-Normal
+       Month3: W=0.9709, p=0.5641 → Non-Normal
+       Month6: W=0.9727, p=0.6164 → Non-Normal
+  [5] Non-parametric alternative to Repeated Measures ANOVA.
+  [6] Listwise deletion applied for missing values.
+
+  FRIEDMAN TEST RESULTS
+----------------------------------------------------------------------
+  Test                     : Friedman Chi-Square Test
+  Null Hypothesis          : All repeated measures have identical distributions
+  Friedman χ² Statistic    : 90.0000
+  Degrees of Freedom       : 3
+  p-value                  : 0.0000
+  Number of Subjects (N)   : 30
+  Number of Measures (k)   : 4
+  Result                   : SIGNIFICANT (p < 0.05)
+
+  Measure                               n         Median           Mean
+  ------------------------------ -------- -------------- --------------
+  Baseline                             30       181.0000       181.0333
+  Month1                               30       171.0000       171.6667
+  Month3                               30       157.0000       157.0667
+  Month6                               30       143.5000       143.8000
+
+  POST-HOC ANALYSIS (Pairwise Wilcoxon Signed-Rank + Bonferroni Correction)
+----------------------------------------------------------------------
+  Total comparisons : 6
+  Correction        : Bonferroni
+  Corrected α       : 0.0083
+
+  Measure 1        Measure 2           W Statistic      p-value    Bonf. p-value    Significant
+  ---------------- ---------------- -------------- ------------ ---------------- --------------
+  Baseline         Month1                     0.00       0.0000           0.0000          YES *
+  Baseline         Month3                     0.00       0.0000           0.0000          YES *
+  Baseline         Month6                     0.00       0.0000           0.0000          YES *
+  Month1           Month3                     0.00       0.0000           0.0000          YES *
+  Month1           Month6                     0.00       0.0000           0.0000          YES *
+  Month3           Month6                     0.00       0.0000           0.0000          YES *
+
+  EFFECT SIZE
+----------------------------------------------------------------------
+  Kendall's W                    : 1.0000
+  Effect Size Interpretation     : Large
+  Formula                        : W = χ²_F / (N × (k - 1))
+
+  MEDICAL & STATISTICAL INTERPRETATION
+----------------------------------------------------------------------
+  At least one repeated measurement differs significantly from the others.
+  χ²(3) = 90.0000, p = 0.0000, Kendall's W = 1.0000
+
+  The Friedman Test was used as the non-parametric alternative to
+  Repeated Measures ANOVA. It does not require normality and is
+  appropriate for ordinal or non-normally distributed repeated data.
+  Kendall's W = 1.0000 (Large) indicates the degree
+  of concordance across repeated measurements.
+  Statistical significance does not imply clinical importance.
+  Confounders and covariates have not been adjusted for.
+
+======================================================================
+  END OF REPORT
+======================================================================

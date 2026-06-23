@@ -1,0 +1,187 @@
+======================================================================
+VM-WIT-STATS | VM Medical College Statistical Analysis Toolkit
+======================================================================
+  Test             : One-Way Analysis of Variance (ANOVA)
+  Date / Time      : 2026-06-20 22:45:58
+  Outcome Variable : charges
+  Group Variable   : dzclass
+  Groups           : ARF/MOSF, COPD/CHF/Cirrhosis, Cancer, Coma
+  Total N          : 8,933
+======================================================================
+
+DESCRIPTIVE STATISTICS
+----------------------------------------------------------------------
+  Outcome Variable : charges
+
+  Group            : ARF/MOSF
+  N                    : 4,123
+  Mean                 : 99187.5715
+  Median               : 55969.0000
+  Std Deviation        : 130397.1011
+  Std Error            : 2030.7725
+  Min                  : 2339.0000
+  Max                  : 1273347.0000
+  Q1 (25th pct)        : 27103.0000
+  Q3 (75th pct)        : 113353.0000
+  IQR                  : 86250.0000
+  Skewness             : 3.5923
+  Kurtosis             : 17.7687
+
+  Group            : COPD/CHF/Cirrhosis
+  N                    : 2,829
+  Mean                 : 27618.7836
+  Median               : 11516.0000
+  Std Deviation        : 56708.5939
+  Std Error            : 1066.1846
+  Min                  : 1314.4490
+  Max                  : 1435423.0000
+  Q1 (25th pct)        : 5872.0000
+  Q3 (75th pct)        : 26374.0000
+  IQR                  : 20502.0000
+  Skewness             : 8.9232
+  Kurtosis             : 154.0199
+
+  Group            : Cancer
+  N                    : 1,395
+  Mean                 : 13114.6922
+  Median               : 9073.0000
+  Std Deviation        : 12749.7469
+  Std Error            : 341.3614
+  Min                  : 1169.0000
+  Max                  : 133944.0000
+  Q1 (25th pct)        : 5376.0995
+  Q3 (75th pct)        : 15943.5000
+  IQR                  : 10567.4005
+  Skewness             : 3.2051
+  Kurtosis             : 17.3130
+
+  Group            : Coma
+  N                    : 586
+  Mean                 : 52156.1103
+  Median               : 31177.0000
+  Std Deviation        : 62769.1229
+  Std Error            : 2592.9686
+  Min                  : 2583.0000
+  Max                  : 712554.0000
+  Q1 (25th pct)        : 15773.7500
+  Q3 (75th pct)        : 66975.2500
+  IQR                  : 51201.5000
+  Skewness             : 3.9438
+  Kurtosis             : 27.2663
+
+
+ASSUMPTION CHECKS
+----------------------------------------------------------------------
+  1. Independence of Observations
+     Assumed — each row represents a unique patient/subject.
+     Verify this holds for your study design.
+
+  2. Normality (Shapiro-Wilk Test per Group)
+     Group 'ARF/MOSF' (n=4,123): Shapiro-Wilk: W = 0.6248, p = 0.0000 → NOT normally distributed (p < 0.05)
+     Group 'COPD/CHF/Cirrhosis' (n=2,829): Shapiro-Wilk: W = 0.3948, p = 0.0000 → NOT normally distributed (p < 0.05)
+     Group 'Cancer' (n=1,395): Shapiro-Wilk: W = 0.7118, p = 0.0000 → NOT normally distributed (p < 0.05)
+     Group 'Coma' (n=586): Shapiro-Wilk: W = 0.6574, p = 0.0000 → NOT normally distributed (p < 0.05)
+
+  3. Homogeneity of Variance (Levene's Test)
+     Levene Statistic : 270.4372
+     Levene p-value   : 0.0000
+     Variances are UNEQUAL across groups (p < 0.05). Homogeneity assumption VIOLATED — interpret results with caution.
+
+     ⚠ NOTE: Welch's ANOVA or a non-parametric test may be more
+       appropriate when variance homogeneity is violated.
+
+  4. ANOVA Appropriateness
+     ✔ Outcome variable is continuous.
+    ✔ Group variable contains ≥ 3 independent groups.
+     ✔ Standard One-Way ANOVA applied.
+
+
+ONE-WAY ANOVA RESULTS
+----------------------------------------------------------------------
+  F-Statistic              : 451.6721
+  Degrees of Freedom       : df₁ = 3  (between groups)
+                           : df₂ = 8929  (within groups)
+  P-Value                  : 0.000000
+  Statistical Significance : Highly statistically significant (p < 0.001).
+  Decision                 : Reject H₀ — group means are NOT all equal.
+
+
+POST-HOC ANALYSIS — TUKEY HSD
+----------------------------------------------------------------------
+  (Performed because ANOVA was statistically significant)
+  Outcome Variable : charges
+
+  Group A                 Group B                    Mean A     Mean B       Diff     p-adj   Sig  95% CI
+  ----------------------  ----------------------  ---------  ---------  ---------  --------  ----  ----------------------
+  ARF/MOSF                COPD/CHF/Cirrhosis      99187.5715  27618.7836  +71568.7879    0.0000     ✔  [+65567.7032, +77569.8726]
+  ARF/MOSF                Cancer                  99187.5715  13114.6922  +86072.8794    0.0000     ✔  [+78459.1911, +93686.5677]
+  ARF/MOSF                Coma                    99187.5715  52156.1103  +47031.4613    0.0000     ✔  [+36179.5337, +57883.3888]
+  COPD/CHF/Cirrhosis      Cancer                  27618.7836  13114.6922  +14504.0915    0.0000     ✔  [+6462.2336, +22545.9493]
+  COPD/CHF/Cirrhosis      Coma                    27618.7836  52156.1103  -24537.3266    0.0000     ✔  [-35693.8297, -13380.8236]
+  Cancer                  Coma                    13114.6922  52156.1103  -39041.4181    0.0000     ✔  [-51141.9467, -26940.8895]
+
+  Significant pairs (p < 0.05) : 6 of 6
+
+  Significant differences found between:
+    • 'ARF/MOSF' vs 'COPD/CHF/Cirrhosis' (Mean diff = +71568.7879, p = 0.0000)
+    • 'ARF/MOSF' vs 'Cancer' (Mean diff = +86072.8794, p = 0.0000)
+    • 'ARF/MOSF' vs 'Coma' (Mean diff = +47031.4613, p = 0.0000)
+    • 'COPD/CHF/Cirrhosis' vs 'Cancer' (Mean diff = +14504.0915, p = 0.0000)
+    • 'COPD/CHF/Cirrhosis' vs 'Coma' (Mean diff = -24537.3266, p = 0.0000)
+    • 'Cancer' vs 'Coma' (Mean diff = -39041.4181, p = 0.0000)
+
+
+EFFECT SIZE
+----------------------------------------------------------------------
+  Eta Squared (η²)  : 0.1318
+  Magnitude         : Medium
+  SS Between Groups : 12400466774399.4434
+  SS Within Groups  : 81713977742779.5469
+  SS Total          : 94114444517178.9844
+  Reference: Negligible η²<0.01 | Small η²<0.06 | Medium η²<0.14 | Large η²≥0.14
+
+
+MEDICAL & STATISTICAL INTERPRETATION
+----------------------------------------------------------------------
+
+  Overall Result      : Highly statistically significant (p < 0.001).
+  ANOVA Decision      : Reject H₀
+
+  HYPOTHESIS:
+  H₀ : All group means of 'charges' are equal.
+  H₁ : At least one group mean differs.
+
+  ANOVA: F(3, 8929) = 451.6721, p = 0.000000
+
+  MAIN CONCLUSION:
+  At least one group mean of 'charges' differs significantly from the others across 'dzclass' groups.
+
+  ACTION: Tukey HSD post-hoc analysis has been performed above to identify which specific groups differ.
+
+  EFFECT SIZE (Eta Squared — η²):
+    η²              = 0.1318
+    Magnitude       = Medium
+    SS Between      = 12400466774399.4434
+    SS Within       = 81713977742779.5469
+    SS Total        = 94114444517178.9844
+    Reference: Negligible<0.01 | Small<0.06 | Medium<0.14 | Large≥0.14
+
+  CLINICAL RELEVANCE:
+    The effect size (η² = 0.1318) indicates a medium practical effect.
+    Even a statistically significant result should be evaluated in the context
+    of clinical meaningfulness, sample size, and study design.
+
+  LIMITATIONS:
+    • One-Way ANOVA assumes independence, normality, and homogeneity.
+    • Violations of these assumptions reduce reliability of results.
+    • Levene test detected unequal variances — proceed with caution.
+    • ANOVA identifies THAT a difference exists, not WHERE (use post-hoc).
+    • Correlation does not imply causation.
+
+  NON-PARAMETRIC ALTERNATIVE:
+    If normality assumptions are seriously violated, use the
+    Kruskal-Wallis Test (hypothesis_tests/kruskal_wallis_test.py).
+
+======================================================================
+END OF REPORT
+======================================================================

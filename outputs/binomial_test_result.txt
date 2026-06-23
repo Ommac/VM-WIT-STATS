@@ -1,0 +1,122 @@
+======================================================================
+VM-WIT-STATS | VM Medical College Statistical Analysis Toolkit
+======================================================================
+  Test              : Exact Binomial Test (two-sided)
+  Date / Time       : 2026-06-20 23:00:09
+  Outcome Variable  : sex
+  Success Category  : male
+  Failure Category  : female
+  Expected Prop (p₀): 0.5 (50.0%)
+  Total N           : 9,105
+======================================================================
+
+DESCRIPTIVE STATISTICS
+----------------------------------------------------------------------
+  Outcome Variable        : sex
+  Success Category        : male
+  Failure Category        : female
+
+  Total Observations (N)         : 9,105
+  Success Count (k)              : 5,125
+  Failure Count                  : 3,980
+
+  Observed Proportion (p̂)       : 0.562878  (56.29%)
+  Observed Failure Rate          : 0.437122  (43.71%)
+  Expected Proportion (p₀)       : 0.500000  (50.00%)
+
+  Difference (p̂ − p₀)           : +0.062878
+
+
+ASSUMPTION CHECKS
+----------------------------------------------------------------------
+  1. Binary Outcome Variable
+     ✔ Column 'sex' contains exactly 2 categories: 'male' and 'female'.
+     Each observation belongs to one and only one category.
+
+  2. Independence of Observations
+     Assumed — each row represents a unique patient/subject.
+     Verify this holds for your study design.
+     (Repeated measures or clustered data violate this assumption.)
+
+  3. Fixed Number of Trials
+     ✔ N = 9,105 observations. The number of trials is fixed and known.
+
+  4. Constant Probability Under H₀
+     ✔ Expected proportion p₀ = 0.5 is fixed for all trials.
+     Under H₀, each observation has the same probability of success.
+
+  5. Test Selection (Exact vs Approximate)
+     n×p₀ = 4552.5 ≥ 5 and n×(1−p₀) = 4552.5 ≥ 5 — Normal approximation would also be valid, but exact test is used.
+     The Exact Binomial Test (Clopper-Pearson) is used regardless
+     of sample size — it is always valid and never approximates.
+
+
+BINOMIAL TEST RESULTS
+----------------------------------------------------------------------
+  Test Applied              : Exact Binomial Test (two-sided)
+  Successes (k)             : 5,125
+  Trials (N)                : 9,105
+  Observed Proportion (p̂)  : 0.562878  (56.29%)
+  Expected Proportion (p₀) : 0.500000  (50.00%)
+  P-Value (two-sided)       : 0.000000
+  95% CI (Clopper-Pearson)  : [0.552615, 0.573100]
+  Statistical Significance  : Highly statistically significant (p < 0.001).
+  Decision                  : Reject H₀
+
+
+EFFECT SIZE
+----------------------------------------------------------------------
+  Observed Proportion (p̂)  : 0.562878  (56.29%)
+  Expected Proportion (p₀) : 0.500000  (50.00%)
+  Difference (p̂ − p₀)     : +0.062878  (+6.29%)
+  |Difference|             : 0.062878
+  Direction                : Observed proportion is above expected
+
+  Effect Size Label        : Small
+  Reference: |Δ| < 0.05 → Negligible | < 0.10 → Small | < 0.20 → Medium | ≥ 0.20 → Large
+
+
+MEDICAL & STATISTICAL INTERPRETATION
+----------------------------------------------------------------------
+
+  Overall Result      : Highly statistically significant (p < 0.001).
+  Decision            : Reject H₀
+
+  HYPOTHESIS:
+  H₀ : The true proportion of 'male' = 0.5
+  H₁ : The true proportion of 'male' ≠ 0.5
+
+  Test     : Exact Binomial Test (two-sided)
+  k        : 5,125  (successes observed)
+  N        : 9,105  (total observations)
+  p̂        : 0.562878  (observed proportion)
+  p₀       : 0.500000  (expected proportion under H₀)
+  p-value  : 0.000000
+  95% CI   : [0.552615, 0.573100]
+
+  MAIN CONCLUSION:
+  The observed proportion of 'male' (56.29%) differs significantly from the expected proportion (50.00%).
+
+  EFFECT SIZE:
+  The difference of +0.0629 (+6.29%) is classified as SMALL.
+  The observed proportion is above expected.
+
+  CLINICAL RELEVANCE:
+  A statistically significant deviation from the expected rate was found.
+  The 95% confidence interval [0.5526, 0.5731] does not include the expected value p₀ = 0.5, which is consistent with rejecting H₀.
+  Clinical significance should be assessed alongside statistical significance.
+  An effect size of small does not automatically imply
+  clinical importance — consider the medical context and study design.
+
+  LIMITATIONS:
+    • The Binomial Test tests ONE proportion against a FIXED reference.
+    • For comparing two proportions against each other, use Z-Test or
+      Chi-Square Test of Independence.
+    • Independence of observations is assumed but not verified by the test.
+    • The expected proportion p₀ should come from literature or theory,
+      not estimated from the same dataset being tested.
+    • Correlation does not imply causation.
+
+======================================================================
+END OF REPORT
+======================================================================
