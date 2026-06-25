@@ -2,25 +2,25 @@
   VM-WIT-STATS | VM Medical College Statistical Analysis Toolkit
   Module  : Shapiro-Wilk Normality Test
   Dataset : data/support2.csv
-  Column  : charges
-  Date    : 2026-06-22 01:17:34
+  Column  : age
+  Date    : 2026-06-25 16:36:32
 ======================================================================
 
   DESCRIPTIVE STATISTICS
 ----------------------------------------------------------------------
-  Variable              : charges
-  Sample Size (n)       : 8,933
-  Mean                  : 59,995.7878
-  Median                : 25,024.0000
-  Std Deviation         : 102,648.7782
-  Std Error of Mean     : 1,086.0632
-  Minimum               : 1,169.0000
-  Maximum               : 1,435,423.0000
-  25th Percentile (Q1)  : 9,740.0000
-  75th Percentile (Q3)  : 64,598.0000
-  IQR (Q3 - Q1)         : 54,858.0000
-  Skewness              : 4.6864
-  Kurtosis (excess)     : 32.1255
+  Variable              : age
+  Sample Size (n)       : 9,105
+  Mean                  : 62.6508
+  Median                : 64.8570
+  Std Deviation         : 15.5937
+  Std Error of Mean     : 0.1634
+  Minimum               : 18.0420
+  Maximum               : 101.8480
+  25th Percentile (Q1)  : 52.7970
+  75th Percentile (Q3)  : 73.9990
+  IQR (Q3 - Q1)         : 21.2020
+  Skewness              : -0.5020
+  Kurtosis (excess)     : -0.1659
 
   SHAPIRO-WILK TEST RESULTS
 ----------------------------------------------------------------------
@@ -30,7 +30,7 @@
 
   Test Status : NOT ASSESSED (n > 5000)
 
-  Shapiro-Wilk Test was not performed because n = 8,933 exceeds the recommended maximum of 5,000. For large samples, trivially small deviations from normality will produce significant p-values that have no practical meaning. Please use Anderson-Darling or Kolmogorov-Smirnov tests, and supplement with Q-Q plots and histograms.
+  Shapiro-Wilk Test was not performed because n = 9,105 exceeds the recommended maximum of 5,000. For large samples, trivially small deviations from normality will produce significant p-values that have no practical meaning. Please use Anderson-Darling or Kolmogorov-Smirnov tests, and supplement with Q-Q plots and histograms.
 
   ALTERNATIVES FOR LARGE SAMPLES:
     1. Anderson-Darling Test   (normality_tests/anderson_test.py)

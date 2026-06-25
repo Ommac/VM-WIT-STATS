@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import os
 
 # Read dataset from CSV file
-df = pd.read_csv("data/sample_data.csv")
+df = pd.read_csv("data/support2.csv")
 
 # Create outputs folder if it doesn't exist
 os.makedirs("outputs", exist_ok=True)

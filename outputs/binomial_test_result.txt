@@ -2,35 +2,35 @@
 VM-WIT-STATS | VM Medical College Statistical Analysis Toolkit
 ======================================================================
   Test              : Exact Binomial Test (two-sided)
-  Date / Time       : 2026-06-20 23:00:09
-  Outcome Variable  : sex
-  Success Category  : male
-  Failure Category  : female
+  Date / Time       : 2026-06-25 16:56:04
+  Outcome Variable  : death
+  Success Category  : 1
+  Failure Category  : 0
   Expected Prop (p₀): 0.5 (50.0%)
   Total N           : 9,105
 ======================================================================
 
 DESCRIPTIVE STATISTICS
 ----------------------------------------------------------------------
-  Outcome Variable        : sex
-  Success Category        : male
-  Failure Category        : female
+  Outcome Variable        : death
+  Success Category        : 1
+  Failure Category        : 0
 
   Total Observations (N)         : 9,105
-  Success Count (k)              : 5,125
-  Failure Count                  : 3,980
+  Success Count (k)              : 6,201
+  Failure Count                  : 2,904
 
-  Observed Proportion (p̂)       : 0.562878  (56.29%)
-  Observed Failure Rate          : 0.437122  (43.71%)
+  Observed Proportion (p̂)       : 0.681054  (68.11%)
+  Observed Failure Rate          : 0.318946  (31.89%)
   Expected Proportion (p₀)       : 0.500000  (50.00%)
 
-  Difference (p̂ − p₀)           : +0.062878
+  Difference (p̂ − p₀)           : +0.181054
 
 
 ASSUMPTION CHECKS
 ----------------------------------------------------------------------
   1. Binary Outcome Variable
-     ✔ Column 'sex' contains exactly 2 categories: 'male' and 'female'.
+     ✔ Column 'death' contains exactly 2 categories: '1' and '0'.
      Each observation belongs to one and only one category.
 
   2. Independence of Observations
@@ -54,25 +54,25 @@ ASSUMPTION CHECKS
 BINOMIAL TEST RESULTS
 ----------------------------------------------------------------------
   Test Applied              : Exact Binomial Test (two-sided)
-  Successes (k)             : 5,125
+  Successes (k)             : 6,201
   Trials (N)                : 9,105
-  Observed Proportion (p̂)  : 0.562878  (56.29%)
+  Observed Proportion (p̂)  : 0.681054  (68.11%)
   Expected Proportion (p₀) : 0.500000  (50.00%)
   P-Value (two-sided)       : 0.000000
-  95% CI (Clopper-Pearson)  : [0.552615, 0.573100]
+  95% CI (Clopper-Pearson)  : [0.671369, 0.690623]
   Statistical Significance  : Highly statistically significant (p < 0.001).
   Decision                  : Reject H₀
 
 
 EFFECT SIZE
 ----------------------------------------------------------------------
-  Observed Proportion (p̂)  : 0.562878  (56.29%)
+  Observed Proportion (p̂)  : 0.681054  (68.11%)
   Expected Proportion (p₀) : 0.500000  (50.00%)
-  Difference (p̂ − p₀)     : +0.062878  (+6.29%)
-  |Difference|             : 0.062878
+  Difference (p̂ − p₀)     : +0.181054  (+18.11%)
+  |Difference|             : 0.181054
   Direction                : Observed proportion is above expected
 
-  Effect Size Label        : Small
+  Effect Size Label        : Medium
   Reference: |Δ| < 0.05 → Negligible | < 0.10 → Small | < 0.20 → Medium | ≥ 0.20 → Large
 
 
@@ -83,29 +83,29 @@ MEDICAL & STATISTICAL INTERPRETATION
   Decision            : Reject H₀
 
   HYPOTHESIS:
-  H₀ : The true proportion of 'male' = 0.5
-  H₁ : The true proportion of 'male' ≠ 0.5
+  H₀ : The true proportion of '1' = 0.5
+  H₁ : The true proportion of '1' ≠ 0.5
 
   Test     : Exact Binomial Test (two-sided)
-  k        : 5,125  (successes observed)
+  k        : 6,201  (successes observed)
   N        : 9,105  (total observations)
-  p̂        : 0.562878  (observed proportion)
+  p̂        : 0.681054  (observed proportion)
   p₀       : 0.500000  (expected proportion under H₀)
   p-value  : 0.000000
-  95% CI   : [0.552615, 0.573100]
+  95% CI   : [0.671369, 0.690623]
 
   MAIN CONCLUSION:
-  The observed proportion of 'male' (56.29%) differs significantly from the expected proportion (50.00%).
+  The observed proportion of '1' (68.11%) differs significantly from the expected proportion (50.00%).
 
   EFFECT SIZE:
-  The difference of +0.0629 (+6.29%) is classified as SMALL.
+  The difference of +0.1811 (+18.11%) is classified as MEDIUM.
   The observed proportion is above expected.
 
   CLINICAL RELEVANCE:
   A statistically significant deviation from the expected rate was found.
-  The 95% confidence interval [0.5526, 0.5731] does not include the expected value p₀ = 0.5, which is consistent with rejecting H₀.
+  The 95% confidence interval [0.6714, 0.6906] does not include the expected value p₀ = 0.5, which is consistent with rejecting H₀.
   Clinical significance should be assessed alongside statistical significance.
-  An effect size of small does not automatically imply
+  An effect size of medium does not automatically imply
   clinical importance — consider the medical context and study design.
 
   LIMITATIONS:

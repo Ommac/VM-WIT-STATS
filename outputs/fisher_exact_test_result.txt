@@ -2,19 +2,11 @@
   VM-WIT-STATS | VM Medical College Statistical Analysis Toolkit
   Module  : Fisher Exact Test
   Dataset : data/support2.csv
-  Date    : 2026-06-20 23:11:31
+  Date    : 2026-06-25 17:01:23
 ======================================================================
 
   DESCRIPTIVE STATISTICS
 ----------------------------------------------------------------------
-  Variable             : diabetes
-  Total Valid N        : 9,105
-  Categories (2)       : ['0', '1']
-  Category                            Count    Percent
-  ------------------------------ ---------- ----------
-  0                                   7,327     80.47%
-  1                                   1,778     19.53%
-
   Variable             : death
   Total Valid N        : 9,105
   Categories (2)       : ['0', '1']
@@ -23,25 +15,33 @@
   0                                   2,904     31.89%
   1                                   6,201     68.11%
 
+  Variable             : sex
+  Total Valid N        : 9,105
+  Categories (2)       : ['female', 'male']
+  Category                            Count    Percent
+  ------------------------------ ---------- ----------
+  female                              3,980     43.71%
+  male                                5,125     56.29%
+
   CONTINGENCY TABLE (Observed Frequencies)
 ----------------------------------------------------------------------
-  Row variable    : diabetes
-  Column variable : death
+  Row variable    : death
+  Column variable : sex
   Table Dimension : 2 × 2
   Total N         : 9,105
 
-  diabetes                            0              1      Row Total
+  death                          female           male      Row Total
   ---------------------- -------------- -------------- --------------
-  0                               2,357          4,970          7,327
-  1                                 547          1,231          1,778
+  0                               1,337          1,567          2,904
+  1                               2,643          3,558          6,201
   ---------------------- -------------- -------------- --------------
-  Col Total                       2,904          6,201          9,105
+  Col Total                       3,980          5,125          9,105
 
   Cell Reference Layout:
-    a = diabetes=0 AND death=0 : 2,357
-    b = diabetes=0 AND death=1 : 4,970
-    c = diabetes=1 AND death=0 : 547
-    d = diabetes=1 AND death=1 : 1,231
+    a = death=0 AND sex=female : 1,337
+    b = death=0 AND sex=male : 1,567
+    c = death=1 AND sex=female : 2,643
+    d = death=1 AND sex=male : 3,558
 
   ASSUMPTION CHECKS
 ----------------------------------------------------------------------
@@ -54,32 +54,32 @@
   FISHER EXACT TEST RESULTS
 ----------------------------------------------------------------------
   Test               : Fisher Exact Test (Two-Sided)
-  Variable 1         : diabetes  (0 vs 1)
-  Variable 2         : death  (0 vs 1)
-  Odds Ratio (OR)    : 1.0673
-  95% CI             : [0.9542, 1.1938]
-  p-value (exact)    : 0.2568
+  Variable 1         : death  (0 vs 1)
+  Variable 2         : sex  (female vs male)
+  Odds Ratio (OR)    : 1.1486
+  95% CI             : [1.0512, 1.2551]
+  p-value (exact)    : 0.0022
   Total N            : 9,105
-  Result             : NOT SIGNIFICANT (p ≥ 0.05)
+  Result             : SIGNIFICANT (p < 0.05)
 
   ODDS RATIO & CONFIDENCE INTERVAL
 ----------------------------------------------------------------------
-  Odds Ratio (OR)        : 1.0673
-  95% CI Lower Bound     : 0.9542
-  95% CI Upper Bound     : 1.1938
+  Odds Ratio (OR)        : 1.1486
+  95% CI Lower Bound     : 1.0512
+  95% CI Upper Bound     : 1.2551
   OR Magnitude           : Weak
   OR Direction           : Positive association (increased odds in group 1)
   CI Method              : Woolf logit method
 
   MEDICAL & STATISTICAL INTERPRETATION
 ----------------------------------------------------------------------
-  No statistically significant association was detected.
-  OR = 1.0673, 95% CI [0.9542, 1.1938], p = 0.2568
+  There is a statistically significant association between the two categorical variables.
+  OR = 1.1486, 95% CI [1.0512, 1.2551], p = 0.0022
 
   The Fisher Exact Test determines whether two binary categorical variables
   are associated. It uses an exact hypergeometric distribution method,
   making it reliable for small and sparse datasets where Chi-Square fails.
-  OR = 1.0673 (Weak magnitude). Positive association (increased odds in group 1).
+  OR = 1.1486 (Weak magnitude). Positive association (increased odds in group 1).
   Statistical significance does not imply causation.
   Confounding variables have not been adjusted for in this analysis.
 

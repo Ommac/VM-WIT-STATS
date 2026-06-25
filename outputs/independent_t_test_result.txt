@@ -1,64 +1,64 @@
 ======================================================================
 VM-WIT-STATS | VM Medical College Statistical Analysis Toolkit
 ======================================================================
-Test           : Student's Independent T-Test
-Date/Time      : 2026-06-20 00:48:03
-Outcome Column : charges
-Group Column   : death
+Test           : Welch's Independent T-Test
+Date/Time      : 2026-06-25 21:57:52
+Outcome Column : age
+Group Column   : sex
 ======================================================================
 
 DESCRIPTIVE STATISTICS
 ----------------------------------------------------------------------
-  Group: 0
-    N        : 2845
-    Mean     : 62158.3036
-    Median   : 27244.0000
-    Std Dev  : 103077.8817
-    Min      : 1573.0000
-    Max      : 1435423.0000
+  Group: female
+    N        : 3980
+    Mean     : 63.4130
+    Median   : 65.5399
+    Std Dev  : 16.1226
+    Min      : 18.0420
+    Max      : 101.8480
 
-  Group: 1
-    N        : 6088
-    Mean     : 58985.2166
-    Median   : 23886.0000
-    Std Dev  : 102440.4696
-    Min      : 1169.0000
-    Max      : 1273347.0000
+  Group: male
+    N        : 5125
+    Mean     : 62.0589
+    Median   : 64.2549
+    Std Dev  : 15.1454
+    Min      : 18.1190
+    Max      : 100.6790
 
 ASSUMPTION CHECKS
 ----------------------------------------------------------------------
   Normality (Shapiro-Wilk):
-    [0] Shapiro-Wilk: W=0.5444, p=0.0000 → NOT normally distributed
-    [1] n=6088 > 5000. Normality assumed via CLT; Shapiro-Wilk skipped.
+    [female] Shapiro-Wilk: W=0.9777, p=0.0000 → NOT normally distributed
+    [male] n=5125 > 5000. Normality assumed via CLT; Shapiro-Wilk skipped.
 
   Homogeneity of Variance (Levene's Test):
-    Levene Statistic : 0.8525
-    Levene p-value   : 0.3559
-    Variances are EQUAL (Levene's p ≥ 0.05) → Using standard T-Test.
+    Levene Statistic : 14.4926
+    Levene p-value   : 0.0001
+    Variances are UNEQUAL (Levene's p < 0.05) → Using Welch's T-Test.
 
 TEST RESULTS
 ----------------------------------------------------------------------
-  Test Applied      : Student's Independent T-Test
-  T-Statistic       : 1.3612
-  Degrees of Freedom: 8931
-  P-Value           : 0.173478
-  Mean Difference   : 3173.0870  (0 - 1)
-  95% CI for Diff   : [-1406.6264, 7752.8004]
+  Test Applied      : Welch's Independent T-Test
+  T-Statistic       : 4.0813
+  Degrees of Freedom: Welch approximation
+  P-Value           : 0.000045
+  Mean Difference   : 1.3540  (female - male)
+  95% CI for Diff   : [0.7037, 2.0044]
 
 EFFECT SIZE
 ----------------------------------------------------------------------
-  Cohen's d         : 0.0309
+  Cohen's d         : 0.0869
   Magnitude         : Negligible
   Reference: Small=0.2 | Medium=0.5 | Large=0.8
 
 INTERPRETATION
 ----------------------------------------------------------------------
-  No statistically significant difference detected (p ≥ 0.05).
+  Highly statistically significant (p < 0.001).
 
   Medical Conclusion:
-  The mean charges for group '0' (62158.3036) does not differ significantly from
-  group '1' (58985.2166).
-  (t = 1.3612, p = 0.173478)
+  The mean age for group 'female' (63.4130) differs significantly from
+  group 'male' (62.0589).
+  (t = 4.0813, p = 0.000045)
 
   NOTE: If normality assumptions were violated, consider using
         the Mann-Whitney U Test (non-parametric alternative).

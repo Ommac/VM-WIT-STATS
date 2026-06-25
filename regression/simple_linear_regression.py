@@ -506,7 +506,7 @@ def run_diagnostics(result, df: pd.DataFrame, x_col: str, y_col: str) -> dict:
     """
     n = int(result.nobs)
     p = 1   # number of predictors (simple regression)
-    residuals = result.resid.to_numpy(dtype=float)
+    residuals = np.array(result.resid, dtype=float)
     fitted    = result.fittedvalues.to_numpy(dtype=float)
 
     diag = {}

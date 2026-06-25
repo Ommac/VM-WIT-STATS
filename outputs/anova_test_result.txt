@@ -2,72 +2,128 @@
 VM-WIT-STATS | VM Medical College Statistical Analysis Toolkit
 ======================================================================
   Test             : One-Way Analysis of Variance (ANOVA)
-  Date / Time      : 2026-06-20 22:45:58
-  Outcome Variable : charges
-  Group Variable   : dzclass
-  Groups           : ARF/MOSF, COPD/CHF/Cirrhosis, Cancer, Coma
-  Total N          : 8,933
+  Date / Time      : 2026-06-25 16:48:14
+  Outcome Variable : age
+  Group Variable   : dzgroup
+  Groups           : ARF/MOSF w/Sepsis, CHF, COPD, Cirrhosis, Colon Cancer, Coma, Lung Cancer, MOSF w/Malig
+  Total N          : 9,105
 ======================================================================
 
 DESCRIPTIVE STATISTICS
 ----------------------------------------------------------------------
-  Outcome Variable : charges
+  Outcome Variable : age
 
-  Group            : ARF/MOSF
-  N                    : 4,123
-  Mean                 : 99187.5715
-  Median               : 55969.0000
-  Std Deviation        : 130397.1011
-  Std Error            : 2030.7725
-  Min                  : 2339.0000
-  Max                  : 1273347.0000
-  Q1 (25th pct)        : 27103.0000
-  Q3 (75th pct)        : 113353.0000
-  IQR                  : 86250.0000
-  Skewness             : 3.5923
-  Kurtosis             : 17.7687
+  Group            : ARF/MOSF w/Sepsis
+  N                    : 3,515
+  Mean                 : 61.0695
+  Median               : 64.1200
+  Std Deviation        : 17.6243
+  Std Error            : 0.2973
+  Min                  : 18.1460
+  Max                  : 100.8490
+  Q1 (25th pct)        : 48.6145
+  Q3 (75th pct)        : 74.7640
+  IQR                  : 26.1495
+  Skewness             : -0.4439
+  Kurtosis             : -0.6075
 
-  Group            : COPD/CHF/Cirrhosis
-  N                    : 2,829
-  Mean                 : 27618.7836
-  Median               : 11516.0000
-  Std Deviation        : 56708.5939
-  Std Error            : 1066.1846
-  Min                  : 1314.4490
-  Max                  : 1435423.0000
-  Q1 (25th pct)        : 5872.0000
-  Q3 (75th pct)        : 26374.0000
-  IQR                  : 20502.0000
-  Skewness             : 8.9232
-  Kurtosis             : 154.0199
+  Group            : CHF
+  N                    : 1,387
+  Mean                 : 66.7003
+  Median               : 67.9839
+  Std Deviation        : 14.2985
+  Std Error            : 0.3839
+  Min                  : 19.1400
+  Max                  : 101.8480
+  Q1 (25th pct)        : 58.1710
+  Q3 (75th pct)        : 76.7855
+  IQR                  : 18.6145
+  Skewness             : -0.5107
+  Kurtosis             : 0.2326
 
-  Group            : Cancer
-  N                    : 1,395
-  Mean                 : 13114.6922
-  Median               : 9073.0000
-  Std Deviation        : 12749.7469
-  Std Error            : 341.3614
-  Min                  : 1169.0000
-  Max                  : 133944.0000
-  Q1 (25th pct)        : 5376.0995
-  Q3 (75th pct)        : 15943.5000
-  IQR                  : 10567.4005
-  Skewness             : 3.2051
-  Kurtosis             : 17.3130
+  Group            : COPD
+  N                    : 967
+  Mean                 : 69.7106
+  Median               : 70.3630
+  Std Deviation        : 11.0463
+  Std Error            : 0.3552
+  Min                  : 25.6450
+  Max                  : 100.6790
+  Q1 (25th pct)        : 63.0640
+  Q3 (75th pct)        : 77.2430
+  IQR                  : 14.1790
+  Skewness             : -0.4130
+  Kurtosis             : 0.4351
+
+  Group            : Cirrhosis
+  N                    : 508
+  Mean                 : 53.8753
+  Median               : 52.6490
+  Std Deviation        : 12.7244
+  Std Error            : 0.5646
+  Min                  : 20.0520
+  Max                  : 84.9120
+  Q1 (25th pct)        : 44.0792
+  Q3 (75th pct)        : 64.0292
+  IQR                  : 19.9500
+  Skewness             : 0.1808
+  Kurtosis             : -0.6286
+
+  Group            : Colon Cancer
+  N                    : 512
+  Mean                 : 62.2615
+  Median               : 64.0260
+  Std Deviation        : 11.7515
+  Std Error            : 0.5193
+  Min                  : 21.6370
+  Max                  : 92.5720
+  Q1 (25th pct)        : 55.7062
+  Q3 (75th pct)        : 70.6625
+  IQR                  : 14.9562
+  Skewness             : -0.6760
+  Kurtosis             : 0.3721
 
   Group            : Coma
-  N                    : 586
-  Mean                 : 52156.1103
-  Median               : 31177.0000
-  Std Deviation        : 62769.1229
-  Std Error            : 2592.9686
-  Min                  : 2583.0000
-  Max                  : 712554.0000
-  Q1 (25th pct)        : 15773.7500
-  Q3 (75th pct)        : 66975.2500
-  IQR                  : 51201.5000
-  Skewness             : 3.9438
-  Kurtosis             : 27.2663
+  N                    : 596
+  Mean                 : 64.9132
+  Median               : 67.4675
+  Std Deviation        : 16.3155
+  Std Error            : 0.6683
+  Min                  : 18.1900
+  Max                  : 98.0890
+  Q1 (25th pct)        : 54.9360
+  Q3 (75th pct)        : 77.0732
+  IQR                  : 22.1372
+  Skewness             : -0.6525
+  Kurtosis             : 0.0409
+
+  Group            : Lung Cancer
+  N                    : 908
+  Mean                 : 62.0186
+  Median               : 63.1540
+  Std Deviation        : 10.5766
+  Std Error            : 0.3510
+  Min                  : 28.5230
+  Max                  : 94.8010
+  Q1 (25th pct)        : 55.0680
+  Q3 (75th pct)        : 69.6930
+  IQR                  : 14.6250
+  Skewness             : -0.2925
+  Kurtosis             : -0.1003
+
+  Group            : MOSF w/Malig
+  N                    : 712
+  Mean                 : 58.4345
+  Median               : 60.3535
+  Std Deviation        : 15.6223
+  Std Error            : 0.5855
+  Min                  : 18.0420
+  Max                  : 91.4720
+  Q1 (25th pct)        : 47.8730
+  Q3 (75th pct)        : 70.6609
+  IQR                  : 22.7880
+  Skewness             : -0.3926
+  Kurtosis             : -0.5352
 
 
 ASSUMPTION CHECKS
@@ -77,13 +133,17 @@ ASSUMPTION CHECKS
      Verify this holds for your study design.
 
   2. Normality (Shapiro-Wilk Test per Group)
-     Group 'ARF/MOSF' (n=4,123): Shapiro-Wilk: W = 0.6248, p = 0.0000 → NOT normally distributed (p < 0.05)
-     Group 'COPD/CHF/Cirrhosis' (n=2,829): Shapiro-Wilk: W = 0.3948, p = 0.0000 → NOT normally distributed (p < 0.05)
-     Group 'Cancer' (n=1,395): Shapiro-Wilk: W = 0.7118, p = 0.0000 → NOT normally distributed (p < 0.05)
-     Group 'Coma' (n=586): Shapiro-Wilk: W = 0.6574, p = 0.0000 → NOT normally distributed (p < 0.05)
+     Group 'ARF/MOSF w/Sepsis' (n=3,515): Shapiro-Wilk: W = 0.9692, p = 0.0000 → NOT normally distributed (p < 0.05)
+     Group 'CHF' (n=1,387): Shapiro-Wilk: W = 0.9838, p = 0.0000 → NOT normally distributed (p < 0.05)
+     Group 'COPD' (n=967): Shapiro-Wilk: W = 0.9902, p = 0.0000 → NOT normally distributed (p < 0.05)
+     Group 'Cirrhosis' (n=508): Shapiro-Wilk: W = 0.9864, p = 0.0001 → NOT normally distributed (p < 0.05)
+     Group 'Colon Cancer' (n=512): Shapiro-Wilk: W = 0.9688, p = 0.0000 → NOT normally distributed (p < 0.05)
+     Group 'Coma' (n=596): Shapiro-Wilk: W = 0.9655, p = 0.0000 → NOT normally distributed (p < 0.05)
+     Group 'Lung Cancer' (n=908): Shapiro-Wilk: W = 0.9919, p = 0.0001 → NOT normally distributed (p < 0.05)
+     Group 'MOSF w/Malig' (n=712): Shapiro-Wilk: W = 0.9776, p = 0.0000 → NOT normally distributed (p < 0.05)
 
   3. Homogeneity of Variance (Levene's Test)
-     Levene Statistic : 270.4372
+     Levene Statistic : 83.8178
      Levene p-value   : 0.0000
      Variances are UNEQUAL across groups (p < 0.05). Homogeneity assumption VIOLATED — interpret results with caution.
 
@@ -98,9 +158,9 @@ ASSUMPTION CHECKS
 
 ONE-WAY ANOVA RESULTS
 ----------------------------------------------------------------------
-  F-Statistic              : 451.6721
-  Degrees of Freedom       : df₁ = 3  (between groups)
-                           : df₂ = 8929  (within groups)
+  F-Statistic              : 84.3970
+  Degrees of Freedom       : df₁ = 7  (between groups)
+                           : df₂ = 9097  (within groups)
   P-Value                  : 0.000000
   Statistical Significance : Highly statistically significant (p < 0.001).
   Decision                 : Reject H₀ — group means are NOT all equal.
@@ -109,35 +169,74 @@ ONE-WAY ANOVA RESULTS
 POST-HOC ANALYSIS — TUKEY HSD
 ----------------------------------------------------------------------
   (Performed because ANOVA was statistically significant)
-  Outcome Variable : charges
+  Outcome Variable : age
 
   Group A                 Group B                    Mean A     Mean B       Diff     p-adj   Sig  95% CI
   ----------------------  ----------------------  ---------  ---------  ---------  --------  ----  ----------------------
-  ARF/MOSF                COPD/CHF/Cirrhosis      99187.5715  27618.7836  +71568.7879    0.0000     ✔  [+65567.7032, +77569.8726]
-  ARF/MOSF                Cancer                  99187.5715  13114.6922  +86072.8794    0.0000     ✔  [+78459.1911, +93686.5677]
-  ARF/MOSF                Coma                    99187.5715  52156.1103  +47031.4613    0.0000     ✔  [+36179.5337, +57883.3888]
-  COPD/CHF/Cirrhosis      Cancer                  27618.7836  13114.6922  +14504.0915    0.0000     ✔  [+6462.2336, +22545.9493]
-  COPD/CHF/Cirrhosis      Coma                    27618.7836  52156.1103  -24537.3266    0.0000     ✔  [-35693.8297, -13380.8236]
-  Cancer                  Coma                    13114.6922  52156.1103  -39041.4181    0.0000     ✔  [-51141.9467, -26940.8895]
+  ARF/MOSF w/Sepsis       CHF                       61.0695    66.7003    -5.6309    0.0000     ✔  [-7.0840, -4.1777]
+  ARF/MOSF w/Sepsis       COPD                      61.0695    69.7106    -8.6411    0.0000     ✔  [-10.3052, -6.9770]
+  ARF/MOSF w/Sepsis       Cirrhosis                 61.0695    53.8753    +7.1942    0.0000     ✔  [+5.0189, +9.3694]
+  ARF/MOSF w/Sepsis       Colon Cancer              61.0695    62.2615    -1.1921    0.7087     ✘  [-3.3599, +0.9757]
+  ARF/MOSF w/Sepsis       Coma                      61.0695    64.9132    -3.8437    0.0000     ✔  [-5.8738, -1.8136]
+  ARF/MOSF w/Sepsis       Lung Cancer               61.0695    62.0186    -0.9491    0.6961     ✘  [-2.6551, +0.7569]
+  ARF/MOSF w/Sepsis       MOSF w/Malig              61.0695    58.4345    +2.6349    0.0006     ✔  [+0.7516, +4.5183]
+  CHF                     COPD                      66.7003    69.7106    -3.0102    0.0001     ✔  [-4.9301, -1.0904]
+  CHF                     Cirrhosis                 66.7003    53.8753   +12.8250    0.0000     ✔  [+10.4484, +15.2016]
+  CHF                     Colon Cancer              66.7003    62.2615    +4.4388    0.0000     ✔  [+2.0690, +6.8086]
+  CHF                     Coma                      66.7003    64.9132    +1.7872    0.2345     ✘  [-0.4573, +4.0317]
+  CHF                     Lung Cancer               66.7003    62.0186    +4.6818    0.0000     ✔  [+2.7255, +6.6381]
+  CHF                     MOSF w/Malig              66.7003    58.4345    +8.2658    0.0000     ✔  [+6.1530, +10.3786]
+  COPD                    Cirrhosis                 69.7106    53.8753   +15.8353    0.0000     ✔  [+13.3241, +18.3464]
+  COPD                    Colon Cancer              69.7106    62.2615    +7.4490    0.0000     ✔  [+4.9443, +9.9538]
+  COPD                    Coma                      69.7106    64.9132    +4.7974    0.0000     ✔  [+2.4109, +7.1840]
+  COPD                    Lung Cancer               69.7106    62.0186    +7.6920    0.0000     ✔  [+5.5743, +9.8097]
+  COPD                    MOSF w/Malig              69.7106    58.4345   +11.2760    0.0000     ✔  [+9.0130, +13.5391]
+  Cirrhosis               Colon Cancer              53.8753    62.2615    -8.3862    0.0000     ✔  [-11.2561, -5.5164]
+  Cirrhosis               Coma                      53.8753    64.9132   -11.0379    0.0000     ✔  [-13.8051, -8.2706]
+  Cirrhosis               Lung Cancer               53.8753    62.0186    -8.1433    0.0000     ✔  [-10.6824, -5.6042]
+  Cirrhosis               MOSF w/Malig              53.8753    58.4345    -4.5592    0.0000     ✔  [-7.2208, -1.8977]
+  Colon Cancer            Coma                      62.2615    64.9132    -2.6516    0.0705     ✘  [-5.4131, +0.1098]
+  Colon Cancer            Lung Cancer               62.2615    62.0186    +0.2430    1.0000     ✘  [-2.2898, +2.7757]
+  Colon Cancer            MOSF w/Malig              62.2615    58.4345    +3.8270    0.0003     ✔  [+1.1715, +6.4825]
+  Coma                    Lung Cancer               64.9132    62.0186    +2.8946    0.0069     ✔  [+0.4787, +5.3105]
+  Coma                    MOSF w/Malig              64.9132    58.4345    +6.4786    0.0000     ✔  [+3.9343, +9.0229]
+  Lung Cancer             MOSF w/Malig              62.0186    58.4345    +3.5840    0.0001     ✔  [+1.2900, +5.8780]
 
-  Significant pairs (p < 0.05) : 6 of 6
+  Significant pairs (p < 0.05) : 23 of 28
 
   Significant differences found between:
-    • 'ARF/MOSF' vs 'COPD/CHF/Cirrhosis' (Mean diff = +71568.7879, p = 0.0000)
-    • 'ARF/MOSF' vs 'Cancer' (Mean diff = +86072.8794, p = 0.0000)
-    • 'ARF/MOSF' vs 'Coma' (Mean diff = +47031.4613, p = 0.0000)
-    • 'COPD/CHF/Cirrhosis' vs 'Cancer' (Mean diff = +14504.0915, p = 0.0000)
-    • 'COPD/CHF/Cirrhosis' vs 'Coma' (Mean diff = -24537.3266, p = 0.0000)
-    • 'Cancer' vs 'Coma' (Mean diff = -39041.4181, p = 0.0000)
+    • 'ARF/MOSF w/Sepsis' vs 'CHF' (Mean diff = -5.6309, p = 0.0000)
+    • 'ARF/MOSF w/Sepsis' vs 'COPD' (Mean diff = -8.6411, p = 0.0000)
+    • 'ARF/MOSF w/Sepsis' vs 'Cirrhosis' (Mean diff = +7.1942, p = 0.0000)
+    • 'ARF/MOSF w/Sepsis' vs 'Coma' (Mean diff = -3.8437, p = 0.0000)
+    • 'ARF/MOSF w/Sepsis' vs 'MOSF w/Malig' (Mean diff = +2.6349, p = 0.0006)
+    • 'CHF' vs 'COPD' (Mean diff = -3.0102, p = 0.0001)
+    • 'CHF' vs 'Cirrhosis' (Mean diff = +12.8250, p = 0.0000)
+    • 'CHF' vs 'Colon Cancer' (Mean diff = +4.4388, p = 0.0000)
+    • 'CHF' vs 'Lung Cancer' (Mean diff = +4.6818, p = 0.0000)
+    • 'CHF' vs 'MOSF w/Malig' (Mean diff = +8.2658, p = 0.0000)
+    • 'COPD' vs 'Cirrhosis' (Mean diff = +15.8353, p = 0.0000)
+    • 'COPD' vs 'Colon Cancer' (Mean diff = +7.4490, p = 0.0000)
+    • 'COPD' vs 'Coma' (Mean diff = +4.7974, p = 0.0000)
+    • 'COPD' vs 'Lung Cancer' (Mean diff = +7.6920, p = 0.0000)
+    • 'COPD' vs 'MOSF w/Malig' (Mean diff = +11.2760, p = 0.0000)
+    • 'Cirrhosis' vs 'Colon Cancer' (Mean diff = -8.3862, p = 0.0000)
+    • 'Cirrhosis' vs 'Coma' (Mean diff = -11.0379, p = 0.0000)
+    • 'Cirrhosis' vs 'Lung Cancer' (Mean diff = -8.1433, p = 0.0000)
+    • 'Cirrhosis' vs 'MOSF w/Malig' (Mean diff = -4.5592, p = 0.0000)
+    • 'Colon Cancer' vs 'MOSF w/Malig' (Mean diff = +3.8270, p = 0.0003)
+    • 'Coma' vs 'Lung Cancer' (Mean diff = +2.8946, p = 0.0069)
+    • 'Coma' vs 'MOSF w/Malig' (Mean diff = +6.4786, p = 0.0000)
+    • 'Lung Cancer' vs 'MOSF w/Malig' (Mean diff = +3.5840, p = 0.0001)
 
 
 EFFECT SIZE
 ----------------------------------------------------------------------
-  Eta Squared (η²)  : 0.1318
+  Eta Squared (η²)  : 0.0610
   Magnitude         : Medium
-  SS Between Groups : 12400466774399.4434
-  SS Within Groups  : 81713977742779.5469
-  SS Total          : 94114444517178.9844
+  SS Between Groups : 134999.4879
+  SS Within Groups  : 2078763.6369
+  SS Total          : 2213763.1248
   Reference: Negligible η²<0.01 | Small η²<0.06 | Medium η²<0.14 | Large η²≥0.14
 
 
@@ -148,26 +247,26 @@ MEDICAL & STATISTICAL INTERPRETATION
   ANOVA Decision      : Reject H₀
 
   HYPOTHESIS:
-  H₀ : All group means of 'charges' are equal.
+  H₀ : All group means of 'age' are equal.
   H₁ : At least one group mean differs.
 
-  ANOVA: F(3, 8929) = 451.6721, p = 0.000000
+  ANOVA: F(7, 9097) = 84.3970, p = 0.000000
 
   MAIN CONCLUSION:
-  At least one group mean of 'charges' differs significantly from the others across 'dzclass' groups.
+  At least one group mean of 'age' differs significantly from the others across 'dzgroup' groups.
 
   ACTION: Tukey HSD post-hoc analysis has been performed above to identify which specific groups differ.
 
   EFFECT SIZE (Eta Squared — η²):
-    η²              = 0.1318
+    η²              = 0.0610
     Magnitude       = Medium
-    SS Between      = 12400466774399.4434
-    SS Within       = 81713977742779.5469
-    SS Total        = 94114444517178.9844
+    SS Between      = 134999.4879
+    SS Within       = 2078763.6369
+    SS Total        = 2213763.1248
     Reference: Negligible<0.01 | Small<0.06 | Medium<0.14 | Large≥0.14
 
   CLINICAL RELEVANCE:
-    The effect size (η² = 0.1318) indicates a medium practical effect.
+    The effect size (η² = 0.0610) indicates a medium practical effect.
     Even a statistically significant result should be evaluated in the context
     of clinical meaningfulness, sample size, and study design.
 
