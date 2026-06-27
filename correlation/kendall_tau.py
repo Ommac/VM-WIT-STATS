@@ -1,748 +1,781 @@
 """
-kendall_tau.py
-==============
-VM-WIT-STATS | VM Medical College — Medical Statistics Toolkit
+======================================================================
+VM-WIT-STATS | VM Medical College Statistical Analysis Toolkit
+======================================================================
+Module      : Kendall's Tau Correlation
+File        : correlation/kendall_tau.py
+Description : Measures the strength and direction of monotonic
+              association between two variables using Kendall's Tau-b.
 
-Kendall's Tau Correlation Module
+              Uses scipy.stats.kendalltau(), which computes Kendall's
+              Tau-b and automatically corrects for tied ranks.
 
-Measures the strength and direction of monotonic association between two
-variables using concordant and discordant pairs.
-
-Appropriate for:
-    - Ordinal variables and ranked data
+WHEN TO USE:
+    - Ordinal variables (e.g. pain score, disease stage, Likert scale)
+    - Ranked data
     - Small samples
     - Data with many tied ranks
-    - Non-normal distributions
+    - Non-normally distributed continuous variables
 
-Statistical notes:
-    - scipy.stats.kendalltau() computes Tau-b by default, which corrects
-      for ties. This is the appropriate version for ordinal/medical data
-      and is consistent with SAS, SPSS, and R (method="kendall").
-    - Confidence intervals are not included: no closed-form exact CI exists
-      for Kendall's Tau. Bootstrap CIs are not standard in publication-grade
-      Kendall's Tau reporting and exceed the scope of this module.
+WHEN NOT TO USE:
+    - Both variables are nominal/categorical (use Chi-Square or Cramér's V)
+    - You need to measure a linear relationship (use Pearson)
+    - You are primarily interested in direction and linearity
 
-Author: VM-WIT-STATS Toolkit
+ASSUMPTIONS:
+    1. Two variables measured on at least an ordinal scale.
+    2. Observations are independent.
+    3. Monotonic (not necessarily linear) relationship assumed under H1.
+
+REQUIRED LIBRARIES:
+    pip install pandas numpy scipy
+======================================================================
 """
 
 import os
 import sys
+import math
 import warnings
 import numpy as np
 import pandas as pd
+from datetime import datetime
 from scipy import stats
 
 warnings.filterwarnings("ignore")
 
-OUTPUT_DIR = "outputs"
-OUTPUT_FILE = os.path.join(OUTPUT_DIR, "kendall_tau_result.txt")
+# ======================================================================
+# CONSTANTS
+# ======================================================================
+
+SEPARATOR  = "=" * 70
+SEPARATOR2 = "-" * 70
+REPORT_DIR = "outputs"
+REPORT_FILE = os.path.join(REPORT_DIR, "kendall_tau_result.txt")
+
+HEADER = f"""
+{SEPARATOR}
+        VM-WIT-STATS | VM Medical College
+        Statistical Analysis Toolkit
+        Module : Kendall's Tau Correlation
+{SEPARATOR}
+"""
+
+# Suggested interpretation thresholds for |τ|.
+# These are guidelines for medical research context.
+STRENGTH_THRESHOLDS = [
+    (0.10, "Negligible"),
+    (0.30, "Weak"),
+    (0.50, "Moderate"),
+    (0.70, "Strong"),
+    (1.01, "Very Strong"),
+]
 
 
-# ==============================================================================
-# UTILITY
-# ==============================================================================
+# ======================================================================
+# UTILITY FUNCTIONS
+# ======================================================================
 
-def _separator(char: str = "=", width: int = 72) -> str:
-    return char * width
-
-
-def _section(title: str) -> str:
-    sep = _separator()
-    return f"\n{sep}\n{title}\n{sep}\n"
+def print_header() -> None:
+    print(HEADER)
 
 
-def _dual_print(lines: list, file_handle) -> None:
-    """Print each line to console and write to file simultaneously."""
-    for line in lines:
-        print(line)
-        file_handle.write(line + "\n")
+def print_section(title: str) -> None:
+    print(f"\n{SEPARATOR2}")
+    print(f"  {title}")
+    print(SEPARATOR2)
 
 
-def _format_p(p: float) -> str:
-    """Format p-value for publication reporting."""
-    if p is None or np.isnan(p):
+def fmt(val, decimals: int = 4) -> str:
+    """Format a scalar for display, handling None, NaN, and Inf."""
+    if val is None:
         return "N/A"
+    if isinstance(val, float) and math.isnan(val):
+        return "N/A"
+    if isinstance(val, float) and math.isinf(val):
+        return "Inf" if val > 0 else "-Inf"
+    if isinstance(val, (int, np.integer)):
+        return f"{val:,}"
+    if isinstance(val, (float, np.floating)):
+        return f"{val:.{decimals}f}"
+    return str(val)
+
+
+def interpret_strength(tau: float) -> str:
+    """
+    Return the strength label for a given |τ| value.
+
+    Suggested interpretation of Kendall's Tau magnitude:
+        |τ| < 0.10  → Negligible
+        0.10–0.29   → Weak
+        0.30–0.49   → Moderate
+        0.50–0.69   → Strong
+        ≥ 0.70      → Very Strong
+    """
+    abs_tau = abs(tau)
+    for threshold, label in STRENGTH_THRESHOLDS:
+        if abs_tau < threshold:
+            return label
+    return "Very Strong"
+
+
+def interpret_direction(tau: float) -> str:
+    """Return 'Positive', 'Negative', or 'None' for a tau value."""
+    if abs(tau) < 1e-10:
+        return "None (no association)"
+    return "Positive" if tau > 0 else "Negative"
+
+
+def interpret_p(p: float) -> str:
+    """Return a graded significance statement for a p-value."""
     if p < 0.001:
-        return "< 0.001"
-    return f"{p:.4f}"
+        return "Highly statistically significant (p < 0.001)"
+    elif p < 0.01:
+        return "Statistically significant (p < 0.01)"
+    elif p < 0.05:
+        return "Statistically significant (p < 0.05)"
+    else:
+        return "Not statistically significant (p ≥ 0.05)"
 
 
-# ==============================================================================
-# FILE LOADING
-# ==============================================================================
 
-def load_csv(filepath: str) -> pd.DataFrame:
-    """
-    Load a CSV file with comprehensive error handling.
+# ======================================================================
+# INPUT & LOADING
+# ======================================================================
 
-    Parameters:
-        filepath (str): Path to the CSV file.
+def get_csv_path() -> str:
+    """Prompt user for CSV file path with validation loop."""
+    print_section("STEP 1 | LOAD DATASET")
+    print("\n  NOTE: Kendall's Tau requires two numeric or ordinal variables.")
+    print("        Each row must represent one independent observation.")
 
-    Returns:
-        pd.DataFrame or None on failure.
-    """
-    if not filepath or not isinstance(filepath, str):
-        print("[ERROR] Invalid file path provided.")
-        return None
+    while True:
+        path = input("\n  Enter path to CSV file: ").strip()
+        if not path:
+            print("  [ERROR] No path entered. Please try again.")
+            continue
+        if not os.path.isfile(path):
+            print(f"  [ERROR] File not found: '{path}'.")
+            continue
+        return path
 
-    filepath = filepath.strip()
 
-    if not os.path.exists(filepath):
-        print(f"[ERROR] File not found: {filepath}")
-        return None
-
+def load_csv(path: str) -> pd.DataFrame | None:
+    """Load a CSV safely with comprehensive exception handling."""
     try:
-        df = pd.read_csv(filepath)
-    except PermissionError:
-        print(f"[ERROR] Permission denied: {filepath}")
-        return None
+        df = pd.read_csv(path, low_memory=False)
     except pd.errors.EmptyDataError:
-        print("[ERROR] The CSV file is empty.")
+        print("  [ERROR] The CSV file is empty.")
         return None
-    except pd.errors.ParserError as e:
-        print(f"[ERROR] CSV parse error: {e}")
+    except pd.errors.ParserError as exc:
+        print(f"  [ERROR] Failed to parse CSV: {exc}")
         return None
-    except Exception as e:
-        print(f"[ERROR] Unexpected error loading file: {e}")
+    except PermissionError:
+        print("  [ERROR] Permission denied when reading the file.")
+        return None
+    except Exception as exc:
+        print(f"  [ERROR] Unexpected error: {exc}")
         return None
 
     if df.empty:
-        print("[ERROR] Dataset is empty after loading.")
+        print("  [ERROR] CSV loaded but contains no rows.")
         return None
 
-    print(f"\n[INFO] File loaded successfully: {filepath}")
-    print(f"       Rows: {df.shape[0]} | Columns: {df.shape[1]}")
+    print(f"\n  [OK] Dataset loaded.  Rows: {df.shape[0]:,}  Columns: {df.shape[1]:,}")
     return df
 
 
-# ==============================================================================
-# COLUMN DISPLAY
-# ==============================================================================
-
 def display_columns(df: pd.DataFrame) -> None:
-    """Display available columns with dtype and missing value count."""
-    print("\n" + _separator("-"))
-    print("AVAILABLE COLUMNS")
-    print(_separator("-"))
-    for i, col in enumerate(df.columns, 1):
-        n_miss = df[col].isna().sum()
-        print(f"  [{i:>2}] {col:<30} dtype={df[col].dtype}  missing={n_miss}")
-    print(_separator("-"))
+    """Print a numbered table of column names and dtypes."""
+    print_section("STEP 2 | AVAILABLE COLUMNS")
+    print(f"\n  {'#':<5} {'Column Name':<40} {'Dtype':<15}")
+    print(f"  {'-'*5} {'-'*40} {'-'*15}")
+    for idx, (col, dtype) in enumerate(df.dtypes.items(), start=1):
+        print(f"  {idx:<5} {col:<40} {str(dtype):<15}")
 
 
-# ==============================================================================
-# VARIABLE SELECTION
-# ==============================================================================
+# ======================================================================
+# COLUMN SELECTION & VALIDATION
+# ======================================================================
 
-def _resolve_column(token: str, cols: list) -> str:
-    """Resolve a column name or 1-based index string to a column name."""
-    if token.isdigit():
-        idx = int(token) - 1
-        if 0 <= idx < len(cols):
-            return cols[idx]
-        return None
-    if token in cols:
-        return token
-    return None
-
-
-def select_variable(df: pd.DataFrame, prompt: str, exclude: str = None) -> str:
+def select_column(df: pd.DataFrame,
+                   label: str,
+                   exclude: list[str] | None = None) -> str | None:
     """
-    Interactively select a variable column by name or number.
+    Prompt user to select one numeric column.
 
-    Parameters:
-        df (pd.DataFrame): Loaded dataset.
-        prompt (str): Input prompt shown to the user.
-        exclude (str): Column name to exclude from valid choices.
+    Parameters
+    ----------
+    df      : DataFrame
+    label   : Display label shown to user (e.g. 'first variable')
+    exclude : Column names already selected (to prevent duplicate selection)
 
-    Returns:
-        str: Selected column name, or None on failure.
+    Returns
+    -------
+    str : Column name, or None if a valid selection cannot be made
+          after repeated attempts (loop is handled by caller).
     """
-    cols = list(df.columns)
+    exclude = exclude or []
+    print(f"\n  Select the {label}.")
+    print(f"  Must be numeric or ordinal (integer or float).")
+
     while True:
-        try:
-            raw = input(prompt).strip()
-            if not raw:
-                print("[ERROR] No input provided.")
-                continue
-            col = _resolve_column(raw, cols)
-            if col is None:
-                print(f"[ERROR] Column '{raw}' not found.")
-                continue
-            if exclude and col == exclude:
-                print(f"[ERROR] '{col}' is already selected as the other variable. "
-                      "Choose a different column.")
-                continue
-            if not pd.api.types.is_numeric_dtype(df[col]):
-                print(f"[ERROR] '{col}' is not numeric. Both variables must be numeric or ordinal.")
-                continue
-            print(f"[INFO] Selected: {col}")
-            return col
-        except (KeyboardInterrupt, EOFError):
-            print("\n[INFO] Selection cancelled.")
-            return None
-        except Exception as e:
-            print(f"[ERROR] {e}")
+        col = input(f"\n  Enter column name for {label}: ").strip()
+        if not col:
+            print("  [ERROR] No column name entered.")
+            continue
+        if col not in df.columns:
+            print(f"  [ERROR] Column '{col}' not found.")
+            continue
+        if col in exclude:
+            print(f"  [ERROR] '{col}' is already selected. Choose a different column.")
+            continue
+
+        coerced   = pd.to_numeric(df[col], errors="coerce")
+        valid_n   = int(coerced.notna().sum())
+        if valid_n == 0:
+            print(f"  [ERROR] Column '{col}' contains no numeric values.")
+            continue
+
+        non_num = len(df) - valid_n
+        if non_num > 0:
+            print(f"  [WARNING] {non_num:,} non-numeric value(s) in '{col}' "
+                  f"will be treated as missing.")
+
+        print(f"  [OK] '{col}' selected  (valid numeric values: {valid_n:,})")
+        return col
 
 
-# ==============================================================================
-# VALIDATION
-# ==============================================================================
+# ======================================================================
+# DATA CLEANING
+# ======================================================================
 
-def validate_data(df: pd.DataFrame, var1: str, var2: str) -> bool:
+def clean_pair(df: pd.DataFrame,
+               col_x: str,
+               col_y: str) -> tuple[np.ndarray, np.ndarray] | tuple[None, None]:
     """
-    Validate the selected variables and dataset for Kendall's Tau analysis.
+    Extract, coerce, and clean the two selected columns.
 
-    Checks:
-        - Columns exist in the dataset
-        - Variables are not identical
-        - Variables are numeric
-        - Missing values (warning, not fatal)
-        - Constant variables (fatal)
-        - Minimum sample size after cleaning
+    Steps:
+        1. Coerce both columns to float64.
+        2. Drop rows where either value is NaN or ±Inf.
+        3. Enforce minimum sample size (n ≥ 3).
+        4. Check for constant variables.
+        5. Check that columns are not identical.
 
-    Parameters:
-        df (pd.DataFrame): Loaded dataset.
-        var1 (str): First variable column name.
-        var2 (str): Second variable column name.
-
-    Returns:
-        bool: True if validation passes, False on fatal error.
+    Returns
+    -------
+    (x, y) : tuple of clean float64 arrays, or (None, None) on failure.
     """
-    # Column existence
-    for var in [var1, var2]:
-        if var not in df.columns:
-            print(f"[ERROR] Column '{var}' not found in dataset.")
-            return False
+    print_section("STEP 4 | DATA CLEANING & VALIDATION")
 
-    # Identical variable check
-    if var1 == var2:
-        print("[ERROR] Both variables are the same column. "
-              "Select two different columns.")
-        return False
+    x_raw = pd.to_numeric(df[col_x], errors="coerce").to_numpy(dtype=float)
+    y_raw = pd.to_numeric(df[col_y], errors="coerce").to_numpy(dtype=float)
 
-    # Numeric check
-    for var in [var1, var2]:
-        if not pd.api.types.is_numeric_dtype(df[var]):
-            print(f"[ERROR] Variable '{var}' is not numeric.")
-            return False
+    original_n = len(x_raw)
+    print(f"\n  Original rows: {original_n:,}")
 
-    # Missing values — warning only
-    for var in [var1, var2]:
-        n_miss = df[var].isna().sum()
-        if n_miss > 0:
-            pct = 100 * n_miss / len(df)
-            print(f"[WARNING] '{var}' has {n_miss} missing value(s) ({pct:.1f}%). "
-                  "These rows will be excluded from analysis.")
+    # Drop NaN and ±Inf in either variable
+    valid = np.isfinite(x_raw) & np.isfinite(y_raw)
+    dropped = int((~valid).sum())
+    x = x_raw[valid]
+    y = y_raw[valid]
+    n = len(x)
 
-    # Clean subset for further checks
-    subset = df[[var1, var2]].dropna()
-    n = len(subset)
+    if dropped > 0:
+        print(f"  Dropped (missing/infinite): {dropped:,} row(s)")
+    print(f"  Pairs used for analysis    : {n:,}")
 
+    # Minimum sample size
     if n < 3:
-        print(f"[ERROR] Insufficient observations after removing missing values: n = {n}. "
-              "Minimum required: 3.")
-        return False
-    if n < 10:
-        print(f"[WARNING SEVERE] Very small sample size: n = {n}. "
-              "Results are highly unreliable.")
-    elif n < 20:
-        print(f"[WARNING] Small sample size: n = {n}. Interpret results with caution.")
-    elif n < 30:
-        print(f"[CAUTION] Sample size: n = {n}. Results may be unstable.")
+        print(f"\n  [ERROR] Only {n} valid pair(s) remain. "
+              f"Kendall's Tau requires at least 3 observations.")
+        return None, None
 
     # Constant variable check
-    for var in [var1, var2]:
-        if subset[var].nunique() <= 1:
-            print(f"[ERROR] Variable '{var}' is constant (no variance). "
-                  "Kendall's Tau cannot be computed.")
-            return False
+    if float(x.max()) - float(x.min()) < 1e-10:
+        print(f"\n  [ERROR] '{col_x}' is constant (all values identical). "
+              f"Tau is undefined for a constant variable.")
+        return None, None
+    if float(y.max()) - float(y.min()) < 1e-10:
+        print(f"\n  [ERROR] '{col_y}' is constant (all values identical). "
+              f"Tau is undefined for a constant variable.")
+        return None, None
 
-    print(f"[INFO] Validation passed. Usable observations: {n}")
-    return True
+    # Identical columns
+    if np.array_equal(x, y):
+        print(f"\n  [WARNING] The two selected columns contain identical values. "
+              f"τ will be 1.0 by definition. Verify your column selection.")
+
+    print(f"\n  [OK] Data validated and ready for analysis.")
+    return x, y
 
 
-# ==============================================================================
+# ======================================================================
 # DESCRIPTIVE STATISTICS
-# ==============================================================================
+# ======================================================================
 
-def descriptive_statistics(df: pd.DataFrame, var1: str, var2: str) -> pd.DataFrame:
-    """
-    Compute basic descriptive statistics for both variables.
-
-    Reports N, Mean, Median, SD, Min, Max, and missing count — the
-    standard descriptive summary appropriate for Kendall's Tau reporting.
-
-    Parameters:
-        df (pd.DataFrame): Cleaned dataset (missing values already removed).
-        var1 (str): First variable name.
-        var2 (str): Second variable name.
-
-    Returns:
-        pd.DataFrame: Descriptive statistics table.
-    """
-    rows = []
-    for var in [var1, var2]:
-        s = df[var]
-        rows.append({
-            "Variable": var,
-            "N": len(s),
-            "Mean": s.mean(),
-            "Median": s.median(),
-            "SD": s.std(ddof=1),
-            "Min": s.min(),
-            "Max": s.max(),
-            "Missing (original)": 0,  # filled after merge with original counts
-        })
-    return pd.DataFrame(rows)
-
-
-# ==============================================================================
-# KENDALL'S TAU COMPUTATION
-# ==============================================================================
-
-def compute_kendall_tau(x: np.ndarray, y: np.ndarray) -> dict:
-    """
-    Compute Kendall's Tau-b correlation coefficient and p-value.
-
-    Uses scipy.stats.kendalltau(), which computes Tau-b — the standard
-    version that corrects for tied ranks. Tau-b is the appropriate choice
-    for ordinal and ranked medical data and is consistent with SAS PROC
-    CORR, SPSS, and R cor(..., method='kendall').
-
-    Tau-b formula:
-        τ_b = (C - D) / sqrt((C + D + T_x)(C + D + T_y))
-    where C = concordant pairs, D = discordant pairs,
-    T_x = ties in x only, T_y = ties in y only.
-
-    The p-value is computed using the asymptotic normal approximation,
-    which is appropriate for n ≥ 10. For very small n, exact p-values
-    are preferable but are not provided by scipy at this time.
-
-    Parameters:
-        x (np.ndarray): First variable values.
-        y (np.ndarray): Second variable values.
-
-    Returns:
-        dict: tau, p_value, n, concordant/discordant pair counts.
-    """
-    try:
-        tau, p_value = stats.kendalltau(x, y)
-
-        # Concordant and discordant pair counts
-        n = len(x)
-        n_pairs = n * (n - 1) // 2
-        concordant = 0
-        discordant = 0
-        for i in range(n):
-            for j in range(i + 1, n):
-                dx = x[i] - x[j]
-                dy = y[i] - y[j]
-                prod = dx * dy
-                if prod > 0:
-                    concordant += 1
-                elif prod < 0:
-                    discordant += 1
-
-        return {
-            "tau": float(tau),
-            "p_value": float(p_value),
-            "n": n,
-            "n_pairs": n_pairs,
-            "concordant": concordant,
-            "discordant": discordant,
-            "ties": n_pairs - concordant - discordant,
-        }
-    except Exception as e:
-        print(f"[ERROR] Kendall's Tau computation failed: {e}")
-        return None
-
-
-# ==============================================================================
-# INTERPRETATION
-# ==============================================================================
-
-def interpret_tau(tau: float, p_value: float, n: int,
-                  var1: str, var2: str) -> dict:
-    """
-    Interpret the Kendall's Tau result statistically and clinically.
-
-    Strength thresholds (adapted for Tau from Botsch, 2011 and
-    Dancey & Reidy, 2011 — widely used in medical statistics):
-        |τ| < 0.10  : Negligible
-        0.10–0.29   : Weak
-        0.30–0.49   : Moderate
-        0.50–0.69   : Strong
-        ≥ 0.70      : Very Strong
-
-    Note: Tau values are systematically lower than Pearson r or Spearman ρ
-    for the same dataset (typically τ ≈ 0.67 × ρ). Strength labels account
-    for this by using lower thresholds than those applied to r or ρ.
-
-    Parameters:
-        tau (float): Kendall's Tau-b coefficient.
-        p_value (float): Two-tailed p-value.
-        n (int): Sample size.
-        var1 (str): Name of first variable.
-        var2 (str): Name of second variable.
-
-    Returns:
-        dict: direction, strength, decision, statistical_interp,
-              medical_interp strings.
-    """
-    abs_tau = abs(tau)
-
-    # Direction
-    if abs_tau < 0.001:
-        direction = "No association"
-    elif tau > 0:
-        direction = "Positive (concordant)"
-    else:
-        direction = "Negative (discordant)"
-
-    # Strength
-    if abs_tau < 0.10:
-        strength = "Negligible"
-    elif abs_tau < 0.30:
-        strength = "Weak"
-    elif abs_tau < 0.50:
-        strength = "Moderate"
-    elif abs_tau < 0.70:
-        strength = "Strong"
-    else:
-        strength = "Very Strong"
-
-    # Hypothesis decision
-    alpha = 0.05
-    if p_value < alpha:
-        decision = f"Reject H₀ (p = {_format_p(p_value)} < {alpha})"
-        sig_statement = "statistically significant"
-    else:
-        decision = f"Fail to Reject H₀ (p = {_format_p(p_value)} ≥ {alpha})"
-        sig_statement = "not statistically significant"
-
-    # Statistical interpretation
-    if tau >= 0:
-        direction_text = (
-            f"As {var1} increases, {var2} tends to increase (concordant pairs dominate)."
-        )
-    else:
-        direction_text = (
-            f"As {var1} increases, {var2} tends to decrease (discordant pairs dominate)."
-        )
-
-    statistical_interp = (
-        f"Kendall's Tau-b = {tau:.4f} indicates a {strength.lower()} "
-        f"{direction.lower()} monotonic association between {var1} and {var2}. "
-        f"The result is {sig_statement} at α = {alpha}. "
-        f"{direction_text}"
-    )
-
-    # Medical interpretation
-    if p_value >= alpha:
-        medical_interp = (
-            f"There is insufficient evidence of a monotonic association between "
-            f"{var1} and {var2} in this sample (τ = {tau:.4f}, p = {_format_p(p_value)}). "
-            "This may reflect a true absence of association, insufficient sample size, "
-            "or high variability in the data. Clinical conclusions should not be drawn "
-            "from a non-significant result alone."
-        )
-    else:
-        if abs_tau < 0.10:
-            practical = (
-                "Although statistically significant, the association is negligible in magnitude. "
-                "This may reflect a very large sample detecting a trivially small effect. "
-                "Clinical relevance is unlikely."
-            )
-        elif abs_tau < 0.30:
-            practical = (
-                "The association is weak. While statistically significant, the clinical "
-                "utility of this relationship is limited. Consider whether this difference "
-                "is meaningful in the clinical context."
-            )
-        elif abs_tau < 0.50:
-            practical = (
-                "The association is moderate and may be of clinical relevance. "
-                "Interpret in the context of the specific variables and clinical setting."
-            )
-        elif abs_tau < 0.70:
-            practical = (
-                "The association is strong and likely clinically meaningful. "
-                "Higher values of one variable are consistently associated with "
-                "higher (or lower) values of the other in the majority of pairs."
-            )
-        else:
-            practical = (
-                "The association is very strong and highly consistent across pairs. "
-                "This level of monotonic concordance is clinically notable."
-            )
-
-        medical_interp = (
-            f"A {strength.lower()} {direction.lower().replace('(concordant)', '').replace('(discordant)', '').strip()} "
-            f"monotonic association was found between {var1} and {var2} "
-            f"(τ = {tau:.4f}, p = {_format_p(p_value)}, n = {n}). "
-            f"{practical}"
-        )
-
+def compute_descriptives(arr: np.ndarray, col: str) -> dict:
+    """Compute basic descriptive statistics for one clean array."""
+    n = len(arr)
     return {
-        "direction": direction,
-        "strength": strength,
-        "decision": decision,
-        "statistical_interp": statistical_interp,
-        "medical_interp": medical_interp,
+        "col"    : col,
+        "n"      : n,
+        "mean"   : float(np.mean(arr)),
+        "median" : float(np.median(arr)),
+        "std"    : float(np.std(arr, ddof=1)) if n > 1 else float("nan"),
+        "min"    : float(np.min(arr)),
+        "max"    : float(np.max(arr)),
     }
 
 
-# ==============================================================================
-# REPORT GENERATION
-# ==============================================================================
+def display_descriptives(dx: dict, dy: dict) -> None:
+    """Print a side-by-side descriptive statistics table."""
+    print_section("DESCRIPTIVE STATISTICS")
 
-def generate_report(
-    var1: str,
-    var2: str,
-    n_original: int,
-    missing_var1: int,
-    missing_var2: int,
-    desc: pd.DataFrame,
-    result: dict,
-    interp: dict,
-    file_handle,
-) -> None:
+    label_w = 22
+    val_w   = 20
+
+    col_x = dx["col"]; col_y = dy["col"]
+    header_x = str(col_x)[:val_w]
+    header_y = str(col_y)[:val_w]
+
+    print(f"\n  {'Statistic':<{label_w}} {header_x:>{val_w}} {header_y:>{val_w}}")
+    print(f"  {'-'*label_w} {'-'*val_w} {'-'*val_w}")
+
+    rows = [
+        ("Sample Size (n)", "n"),
+        ("Mean",            "mean"),
+        ("Median",          "median"),
+        ("Std Deviation",   "std"),
+        ("Minimum",         "min"),
+        ("Maximum",         "max"),
+    ]
+
+    for label, key in rows:
+        vx = fmt(dx[key])
+        vy = fmt(dy[key])
+        print(f"  {label:<{label_w}} {vx:>{val_w}} {vy:>{val_w}}")
+
+
+# ======================================================================
+# KENDALL'S TAU COMPUTATION
+# ======================================================================
+
+def run_kendall_tau(x: np.ndarray, y: np.ndarray) -> dict | None:
     """
-    Write the complete Kendall's Tau report to console and file simultaneously.
+    Compute Kendall's Tau-b correlation.
 
-    Parameters:
-        var1: First variable name.
-        var2: Second variable name.
-        n_original: Row count before removing missing values.
-        missing_var1: Missing count for var1 in original dataset.
-        missing_var2: Missing count for var2 in original dataset.
-        desc: Descriptive statistics DataFrame.
-        result: Output of compute_kendall_tau().
-        interp: Output of interpret_tau().
-        file_handle: Open file handle for writing.
+    Uses scipy.stats.kendalltau(), which computes Kendall's Tau-b
+    and automatically corrects for tied ranks.
+
+    Parameters
+    ----------
+    x, y : clean float64 arrays of equal length
+
+    Returns
+    -------
+    dict with keys: tau, p_value, n, direction, strength, significant
+    Returns None if scipy returns NaN (e.g. both arrays constant).
     """
-    out = []
+    n = len(x)
 
-    # ── HEADER ────────────────────────────────────────────────────────────────
-    out.append(_separator())
-    out.append("VM-WIT-STATS | VM Medical College — Medical Statistics Toolkit")
-    out.append("KENDALL'S TAU CORRELATION ANALYSIS")
-    out.append(_separator())
-    out.append(f"Variable 1        : {var1}")
-    out.append(f"Variable 2        : {var2}")
-    out.append(f"Original rows     : {n_original}")
-    out.append(f"Missing ({var1})  : {missing_var1}")
-    out.append(f"Missing ({var2})  : {missing_var2}")
-    out.append(f"Analysed (n)      : {result['n']}")
-    out.append(f"Method            : Kendall's Tau-b (ties-corrected)")
-    _dual_print(out, file_handle); out = []
-
-    # ── DESCRIPTIVE STATISTICS ─────────────────────────────────────────────────
-    out.append(_section("1. DESCRIPTIVE STATISTICS"))
-    out.append(
-        f"  {'Variable':<28} {'N':>6} {'Mean':>10} {'Median':>10} "
-        f"{'SD':>10} {'Min':>10} {'Max':>10}"
-    )
-    out.append("  " + _separator("-", 86))
-    for _, row in desc.iterrows():
-        out.append(
-            f"  {str(row['Variable']):<28} {int(row['N']):>6} "
-            f"{row['Mean']:>10.4f} {row['Median']:>10.4f} "
-            f"{row['SD']:>10.4f} {row['Min']:>10.4f} {row['Max']:>10.4f}"
-        )
-    _dual_print(out, file_handle); out = []
-
-    # ── CORRELATION RESULT ────────────────────────────────────────────────────
-    out.append(_section("2. KENDALL'S TAU CORRELATION"))
-    out.append(f"  Kendall's Tau-b (τ) : {result['tau']:>10.4f}")
-    out.append(f"  p-value             : {_format_p(result['p_value']):>10}")
-    out.append(f"  Sample Size (n)     : {result['n']:>10}")
-    out.append(f"  Total Pairs         : {result['n_pairs']:>10}")
-    out.append(f"  Concordant Pairs    : {result['concordant']:>10}")
-    out.append(f"  Discordant Pairs    : {result['discordant']:>10}")
-    out.append(f"  Tied Pairs          : {result['ties']:>10}")
-    out.append("")
-    out.append(f"  Direction : {interp['direction']}")
-    out.append(f"  Strength  : {interp['strength']}")
-    _dual_print(out, file_handle); out = []
-
-    # ── HYPOTHESIS TEST ────────────────────────────────────────────────────────
-    out.append(_section("3. HYPOTHESIS TEST"))
-    out.append("  H₀: No monotonic association between the two variables (τ = 0).")
-    out.append("  H₁: A monotonic association exists (τ ≠ 0).")
-    out.append(f"  Significance level (α) : 0.05")
-    out.append(f"  Decision               : {interp['decision']}")
-    _dual_print(out, file_handle); out = []
-
-    # ── INTERPRETATION ────────────────────────────────────────────────────────
-    out.append(_section("4. INTERPRETATION"))
-    out.append("  Strength Reference (Kendall's Tau-b):")
-    out.append("    |τ| < 0.10  : Negligible")
-    out.append("    0.10–0.29   : Weak")
-    out.append("    0.30–0.49   : Moderate")
-    out.append("    0.50–0.69   : Strong")
-    out.append("    ≥ 0.70      : Very Strong")
-    out.append("")
-    out.append("  Statistical Interpretation:")
-    out.append(f"    {interp['statistical_interp']}")
-    out.append("")
-    out.append("  Medical / Clinical Interpretation:")
-    out.append(f"    {interp['medical_interp']}")
-    _dual_print(out, file_handle); out = []
-
-    # ── LIMITATIONS ───────────────────────────────────────────────────────────
-    out.append(_section("5. LIMITATIONS"))
-    out.append("""
-  1. CORRELATION IS NOT CAUSATION
-     A significant Kendall's Tau indicates a monotonic association only.
-     It does not establish causal direction or mechanisms.
-
-  2. MONOTONIC ASSOCIATION ONLY
-     Kendall's Tau detects whether one variable consistently increases (or
-     decreases) as the other increases. It will not detect non-monotonic
-     relationships (e.g., U-shaped associations).
-
-  3. TIES SENSITIVITY
-     Although Tau-b corrects for tied ranks, a very high proportion of ties
-     reduces statistical power and the interpretability of the coefficient.
-     Verify that the ordinal scale has sufficient resolution for the data.
-
-  4. LINEARITY NOT IMPLIED
-     A significant Tau does not imply that the association is linear.
-     Kendall's Tau is a rank-based measure and makes no linearity assumption.
-
-  5. LARGE-SAMPLE INFLATION
-     In large samples (n > 200), even negligibly small values of τ may
-     reach statistical significance. Always evaluate effect magnitude
-     alongside the p-value.
-    """)
-    _dual_print(out, file_handle); out = []
-
-    # ── FOOTER ────────────────────────────────────────────────────────────────
-    out.append(_separator())
-    out.append("END OF REPORT — VM-WIT-STATS | VM Medical College")
-    out.append("For academic publication, report τ, p-value, and sample size.")
-    out.append("This output is research-grade and intended for trained professionals.")
-    out.append(_separator())
-    _dual_print(out, file_handle)
-
-
-# ==============================================================================
-# MAIN
-# ==============================================================================
-
-def main() -> None:
-    """
-    Main entry point for Kendall's Tau correlation analysis.
-
-    Workflow:
-        1. Prompt for CSV file path
-        2. Load dataset
-        3. Display available columns
-        4. User selects two variables
-        5. Validate data
-        6. Remove missing values
-        7. Compute Kendall's Tau-b
-        8. Interpret results
-        9. Display and save report
-    """
-    print(_separator())
-    print("VM-WIT-STATS | VM Medical College")
-    print("KENDALL'S TAU CORRELATION ANALYSIS")
-    print(_separator())
-
-    # ── STEP 1: File path ─────────────────────────────────────────────────────
     try:
-        filepath = input("\nEnter the full path to your CSV file: ").strip()
-    except (KeyboardInterrupt, EOFError):
-        print("\n[INFO] Cancelled.")
-        sys.exit(0)
+        result = stats.kendalltau(x, y)
+    except Exception as exc:
+        print(f"  [ERROR] scipy.stats.kendalltau failed: {exc}")
+        return None
 
-    # ── STEP 2: Load ──────────────────────────────────────────────────────────
-    df = load_csv(filepath)
+    tau     = float(result.statistic)
+    p_value = float(result.pvalue)
+
+    if math.isnan(tau) or math.isnan(p_value):
+        print("  [ERROR] Kendall's Tau returned NaN. "
+              "This may occur when one variable has zero variance.")
+        return None
+
+    # Clamp tau to [-1, 1] — guard against floating-point overshoot
+    tau = max(-1.0, min(1.0, tau))
+
+    direction  = interpret_direction(tau)
+    strength   = interpret_strength(tau)
+    # bool() ensures Python bool, never numpy.bool_
+    significant = bool(p_value < 0.05)
+
+    return {
+        "tau"        : tau,
+        "p_value"    : p_value,
+        "n"          : n,
+        "direction"  : direction,
+        "strength"   : strength,
+        "significant": significant,
+    }
+
+
+# ======================================================================
+# DISPLAY TEST RESULTS
+# ======================================================================
+
+def display_results(res: dict, col_x: str, col_y: str) -> None:
+    """Print Kendall's Tau results in a formatted table."""
+    print_section("KENDALL'S TAU RESULTS")
+
+    tau   = res["tau"]
+    p     = res["p_value"]
+    n     = res["n"]
+    sig   = res["significant"]
+
+    print(f"\n  Variable 1       : {col_x}")
+    print(f"  Variable 2       : {col_y}")
+    print(f"  Test             : Kendall's Tau-b (two-tailed)")
+    print(f"  Null Hypothesis  : No monotonic association between variables")
+    print(f"  Alt. Hypothesis  : A monotonic association exists")
+    print(f"  Significance (α) : 0.05\n")
+
+    print(f"  {SEPARATOR2[:68]}")
+    tau_label = "Kendall's Tau (τ)"
+    print(f"  {tau_label:<40} {tau:>20.4f}")
+    print(f"  {'p-value (two-tailed)':<40} {p:>20.4f}")
+    print(f"  {'Sample Size (n)':<40} {n:>20,}")
+    print(f"  {'Direction':<40} {res['direction']:>20}")
+    print(f"  {'Strength':<40} {res['strength']:>20}")
+    print(f"  {SEPARATOR2[:68]}")
+
+    decision = "Reject H₀" if sig else "Fail to Reject H₀"
+    print(f"\n  Decision : {decision}")
+    print(f"  Result   : {interpret_p(p)}")
+
+
+# ======================================================================
+# INTERPRETATION
+# ======================================================================
+
+def display_interpretation(res: dict, col_x: str, col_y: str) -> None:
+    """Display statistical and medical interpretation of the result."""
+    print_section("INTERPRETATION")
+
+    tau = res["tau"]
+    p   = res["p_value"]
+    sig = res["significant"]
+    n   = res["n"]
+
+    direction = res["direction"]
+    strength  = res["strength"]
+
+    # Statistical interpretation
+    print(f"\n  STATISTICAL INTERPRETATION:")
+    if sig:
+        print(f"  A statistically significant monotonic association was found")
+        print(f"  between '{col_x}' and '{col_y}'.")
+        print(f"  (τ = {tau:.4f}, p = {p:.4f})")
+        if tau > 0:
+            print(f"  As '{col_x}' increases, '{col_y}' tends to increase.")
+        else:
+            print(f"  As '{col_x}' increases, '{col_y}' tends to decrease.")
+    else:
+        print(f"  No statistically significant monotonic association was found")
+        print(f"  between '{col_x}' and '{col_y}'.")
+        print(f"  (τ = {tau:.4f}, p = {p:.4f})")
+
+    print(f"\n  Association direction : {direction}")
+    print(f"  Association strength  : {strength}")
+
+    # Large sample advisory
+    if n > 200 and sig:
+        print(f"\n  [LARGE SAMPLE NOTE] n = {n:,}.")
+        print(f"  With large samples, even small τ values can reach statistical")
+        print(f"  significance. Evaluate the practical importance of τ = {tau:.4f}")
+        print(f"  in the context of your research question.")
+
+    # Medical interpretation
+    print(f"\n  MEDICAL INTERPRETATION:")
+    strength_lower = strength.lower()
+    if sig:
+        print(f"  The {strength_lower} {'positive' if tau > 0 else 'negative'} "
+              f"association (τ = {tau:.4f}) between '{col_x}' and '{col_y}'")
+        if tau > 0:
+            print(f"  indicates that higher values of '{col_x}' are consistently")
+            print(f"  associated with higher values of '{col_y}'.")
+        else:
+            print(f"  indicates that higher values of '{col_x}' are consistently")
+            print(f"  associated with lower values of '{col_y}'.")
+        print(f"\n  Statistical significance (p = {p:.4f}) confirms this association")
+        print(f"  is unlikely to be due to chance alone.")
+        print(f"  However, statistical significance does not imply clinical importance.")
+        print(f"  Evaluate the magnitude of τ = {tau:.4f} in the context of your")
+        print(f"  specific clinical or research question.")
+    else:
+        print(f"  No meaningful monotonic association was detected between")
+        print(f"  '{col_x}' and '{col_y}' (τ = {tau:.4f}, p = {p:.4f}).")
+        print(f"  The data do not support a consistent directional relationship")
+        print(f"  between these two variables in this sample.")
+
+
+def display_limitations() -> None:
+    """Display limitations relevant to Kendall's Tau."""
+    print_section("LIMITATIONS")
+
+    print(f"\n  1. Correlation does NOT imply causation.")
+    print(f"     An association between variables does not establish that")
+    print(f"     one causes the other.")
+
+    print(f"\n  2. Monotonic association only.")
+    print(f"     Kendall's Tau detects whether one variable tends to increase")
+    print(f"     as the other increases, but does not measure linearity.")
+    print(f"     A significant τ does not imply a linear relationship.")
+
+    print(f"\n  3. Sensitive to excessive ties.")
+    print(f"     When many observations share the same rank (many tied values),")
+    print(f"     Tau-b is attenuated. Interpret with caution when data is")
+    print(f"     heavily discretised (e.g. Likert items with few levels).")
+
+    print(f"\n  4. Small effect sizes at large sample sizes.")
+    print(f"     In large samples, even negligible τ values may reach p < 0.05.")
+    print(f"     Always evaluate effect size (τ) alongside p-value.")
+
+    print(f"\n  5. Confounding not controlled.")
+    print(f"     This analysis does not adjust for third variables.")
+    print(f"     Significant associations may be explained by confounders.")
+
+
+# ======================================================================
+# REPORT GENERATION
+# ======================================================================
+
+def build_report(res: dict,
+                 dx: dict,
+                 dy: dict,
+                 col_x: str,
+                 col_y: str,
+                 dataset_path: str) -> str:
+    """Assemble the complete text report as a single string."""
+    ts  = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    tau = res["tau"]
+    p   = res["p_value"]
+    n   = res["n"]
+    sig = res["significant"]
+
+    lines = []
+
+    # Header
+    lines += [
+        SEPARATOR,
+        "  VM-WIT-STATS | VM Medical College Statistical Analysis Toolkit",
+        "  Module  : Kendall's Tau Correlation",
+        f"  Dataset : {dataset_path}",
+        f"  Date    : {ts}",
+        SEPARATOR,
+    ]
+
+    # Descriptive Statistics
+    lines += ["", "  DESCRIPTIVE STATISTICS", SEPARATOR2]
+    label_w = 22; val_w = 18
+    lines.append(
+        f"  {'Statistic':<{label_w}} {str(col_x)[:val_w]:>{val_w}} {str(col_y)[:val_w]:>{val_w}}"
+    )
+    lines.append(f"  {'-'*label_w} {'-'*val_w} {'-'*val_w}")
+    rows = [
+        ("Sample Size (n)", "n"),
+        ("Mean",            "mean"),
+        ("Median",          "median"),
+        ("Std Deviation",   "std"),
+        ("Minimum",         "min"),
+        ("Maximum",         "max"),
+    ]
+    for label, key in rows:
+        lines.append(
+            f"  {label:<{label_w}} {fmt(dx[key]):>{val_w}} {fmt(dy[key]):>{val_w}}"
+        )
+
+    # Test Results
+    lines += [
+        "", "  KENDALL'S TAU RESULTS", SEPARATOR2,
+        f"  Variable 1                    : {col_x}",
+        f"  Variable 2                    : {col_y}",
+        f"  Test                          : Kendall's Tau-b (two-tailed)",
+        "",
+        f"  Kendall's Tau (τ)             : {tau:.4f}",
+        f"  p-value (two-tailed)          : {p:.4f}",
+        f"  Sample Size (n)               : {n:,}",
+        f"  Direction                     : {res['direction']}",
+        f"  Strength                      : {res['strength']}",
+        "",
+        f"  H₀ : No monotonic association",
+        f"  H₁ : A monotonic association exists",
+        f"  Decision : {'Reject H₀' if sig else 'Fail to Reject H₀'}",
+        f"  Result   : {interpret_p(p)}",
+    ]
+
+    # Interpretation
+    lines += ["", "  INTERPRETATION", SEPARATOR2]
+    if sig:
+        lines += [
+            f"  A statistically significant monotonic association was found",
+            f"  between '{col_x}' and '{col_y}'.",
+            f"  (τ = {tau:.4f}, p = {p:.4f})",
+        ]
+        if tau > 0:
+            lines.append(f"  As '{col_x}' increases, '{col_y}' tends to increase.")
+        else:
+            lines.append(f"  As '{col_x}' increases, '{col_y}' tends to decrease.")
+    else:
+        lines += [
+            f"  No statistically significant monotonic association was found",
+            f"  between '{col_x}' and '{col_y}'.",
+            f"  (τ = {tau:.4f}, p = {p:.4f})",
+        ]
+
+    if n > 200 and sig:
+        lines += [
+            "",
+            f"  [LARGE SAMPLE NOTE] n = {n:,}. Small τ values can be",
+            f"  statistically significant at large n. Evaluate practical",
+            f"  importance of τ = {tau:.4f} in the context of your research.",
+        ]
+
+    # Medical Interpretation
+    lines += ["", "  MEDICAL INTERPRETATION", SEPARATOR2]
+    strength_lower = res["strength"].lower()
+    if sig:
+        direction_word = "positive" if tau > 0 else "negative"
+        lines += [
+            f"  The {strength_lower} {direction_word} association (τ = {tau:.4f})",
+            f"  between '{col_x}' and '{col_y}' indicates that",
+        ]
+        if tau > 0:
+            lines.append(
+                f"  higher values of '{col_x}' are consistently associated "
+                f"with higher values of '{col_y}'."
+            )
+        else:
+            lines.append(
+                f"  higher values of '{col_x}' are consistently associated "
+                f"with lower values of '{col_y}'."
+            )
+        lines += [
+            "",
+            f"  Statistical significance (p = {p:.4f}) confirms this is",
+            f"  unlikely to be due to chance. However, statistical significance",
+            f"  does not imply clinical importance. Evaluate the magnitude of",
+            f"  τ = {tau:.4f} in the context of your clinical research question.",
+        ]
+    else:
+        lines += [
+            f"  No meaningful monotonic association was detected between",
+            f"  '{col_x}' and '{col_y}' (τ = {tau:.4f}, p = {p:.4f}).",
+        ]
+
+    # Limitations
+    lines += [
+        "", "  LIMITATIONS", SEPARATOR2,
+        "  • Correlation does NOT imply causation.",
+        "  • Detects monotonic association only — not linearity.",
+        "  • Sensitive to excessive ties in the data.",
+        "  • Small effect sizes may reach significance in large samples.",
+        "  • Confounding variables have not been controlled for.",
+    ]
+
+    # Footer
+    lines += ["", SEPARATOR, "  END OF REPORT", SEPARATOR, ""]
+
+    return "\n".join(lines)
+
+
+def save_report(report_text: str) -> None:
+    """Write the report to outputs/kendall_tau_result.txt."""
+    print_section("SAVE REPORT")
+    try:
+        os.makedirs(REPORT_DIR, exist_ok=True)
+        with open(REPORT_FILE, "w", encoding="utf-8") as f:
+            f.write(report_text)
+        print(f"\n  [OK] Report saved: {os.path.abspath(REPORT_FILE)}")
+    except PermissionError:
+        print(f"  [ERROR] Permission denied: cannot write to {REPORT_FILE}")
+    except OSError as exc:
+        print(f"  [ERROR] Failed to save report: {exc}")
+
+
+# ======================================================================
+# MAIN ORCHESTRATOR
+# ======================================================================
+
+def run_kendall_tau_module() -> None:
+    """
+    Interactive entry point for the Kendall's Tau Correlation module.
+
+    Steps:
+        1. Load CSV
+        2. Display columns
+        3. Select two variables
+        4. Clean data
+        5. Descriptive statistics
+        6. Run Kendall's Tau
+        7. Display results
+        8. Interpretation
+        9. Limitations
+        10. Save report
+    """
+    print_header()
+    print("  This module computes Kendall's Tau-b correlation.")
+    print("  Suitable for ordinal variables, ranked data, and small samples.")
+    print("  Corrects automatically for tied ranks.")
+
+    # Step 1: Load
+    path = get_csv_path()
+    df   = load_csv(path)
     if df is None:
-        print("[FATAL] Could not load data. Exiting.")
         sys.exit(1)
 
-    # ── STEP 3: Display columns ───────────────────────────────────────────────
+    # Step 2: Display columns
     display_columns(df)
 
-    # ── STEP 4: Select variables ──────────────────────────────────────────────
-    var1 = select_variable(
-        df,
-        prompt="\nEnter column name or number for VARIABLE 1: ",
-    )
-    if var1 is None:
-        print("[FATAL] No variable selected. Exiting.")
+    # Step 3: Select variables
+    print_section("STEP 3 | SELECT VARIABLES")
+    col_x = select_column(df, "first variable (Variable 1)")
+    if col_x is None:
         sys.exit(1)
 
-    var2 = select_variable(
-        df,
-        prompt="\nEnter column name or number for VARIABLE 2: ",
-        exclude=var1,
-    )
-    if var2 is None:
-        print("[FATAL] No variable selected. Exiting.")
+    col_y = select_column(df, "second variable (Variable 2)", exclude=[col_x])
+    if col_y is None:
         sys.exit(1)
 
-    # ── STEP 5: Validate ──────────────────────────────────────────────────────
-    missing_var1 = int(df[var1].isna().sum())
-    missing_var2 = int(df[var2].isna().sum())
-    n_original = len(df)
-
-    if not validate_data(df, var1, var2):
-        print("[FATAL] Validation failed. Exiting.")
+    # Step 4: Clean data
+    x, y = clean_pair(df, col_x, col_y)
+    if x is None:
         sys.exit(1)
 
-    # ── STEP 6: Clean ─────────────────────────────────────────────────────────
-    clean = df[[var1, var2]].dropna().reset_index(drop=True)
+    # Step 5: Descriptive statistics
+    dx = compute_descriptives(x, col_x)
+    dy = compute_descriptives(y, col_y)
+    display_descriptives(dx, dy)
 
-    # ── STEP 7: Descriptive statistics ────────────────────────────────────────
-    desc = descriptive_statistics(clean, var1, var2)
-
-    # ── STEP 8: Compute Kendall's Tau ─────────────────────────────────────────
-    print("\n[INFO] Computing Kendall's Tau-b...")
-    result = compute_kendall_tau(clean[var1].values, clean[var2].values)
-    if result is None:
-        print("[FATAL] Correlation computation failed. Exiting.")
+    # Step 6: Run Kendall's Tau
+    print_section("RUNNING KENDALL'S TAU CORRELATION")
+    res = run_kendall_tau(x, y)
+    if res is None:
+        print("\n  [FATAL] Kendall's Tau could not be computed.")
         sys.exit(1)
 
-    # ── STEP 9: Interpret ─────────────────────────────────────────────────────
-    interp = interpret_tau(result["tau"], result["p_value"], result["n"], var1, var2)
+    # Step 7: Display results
+    display_results(res, col_x, col_y)
 
-    # ── STEP 10: Report ───────────────────────────────────────────────────────
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
-    try:
-        with open(OUTPUT_FILE, "w", encoding="utf-8") as fh:
-            generate_report(
-                var1=var1,
-                var2=var2,
-                n_original=n_original,
-                missing_var1=missing_var1,
-                missing_var2=missing_var2,
-                desc=desc,
-                result=result,
-                interp=interp,
-                file_handle=fh,
-            )
-        print(f"\n[INFO] Report saved to: {OUTPUT_FILE}")
-    except OSError as e:
-        print(f"[ERROR] Could not save report: {e}")
-        print("[INFO] Displaying report to console only.")
-        import io
-        generate_report(
-            var1=var1,
-            var2=var2,
-            n_original=n_original,
-            missing_var1=missing_var1,
-            missing_var2=missing_var2,
-            desc=desc,
-            result=result,
-            interp=interp,
-            file_handle=io.StringIO(),
-        )
+    # Step 8: Interpretation
+    display_interpretation(res, col_x, col_y)
 
+    # Step 9: Limitations
+    display_limitations()
+
+    # Step 10: Save report
+    report = build_report(res, dx, dy, col_x, col_y, path)
+    save_report(report)
+
+    print(f"\n{SEPARATOR}")
+    print(f"  VM-WIT-STATS | Kendall's Tau — Analysis Complete")
+    print(f"{SEPARATOR}\n")
+
+
+# ======================================================================
+# ENTRY POINT
+# ======================================================================
 
 if __name__ == "__main__":
-    main()
+    run_kendall_tau_module()
