@@ -19,7 +19,7 @@
 
   [OK] Dataset loaded.
        Rows    : 9,105
-       Columns : 47
+       Columns : 48
 
 ----------------------------------------------------------------------
   STEP 2 | AVAILABLE COLUMNS
@@ -27,53 +27,54 @@
 
   #     Column Name                              Dtype          
   ----- ---------------------------------------- ---------------
-  1     age                                      float64        
-  2     death                                    int64          
-  3     sex                                      object         
-  4     hospdead                                 int64          
-  5     slos                                     int64          
-  6     d.time                                   int64          
-  7     dzgroup                                  object         
-  8     dzclass                                  object         
-  9     num.co                                   int64          
-  10    edu                                      float64        
-  11    income                                   object         
-  12    scoma                                    float64        
-  13    charges                                  float64        
-  14    totcst                                   float64        
-  15    totmcst                                  float64        
-  16    avtisst                                  float64        
-  17    race                                     object         
-  18    sps                                      float64        
-  19    aps                                      float64        
-  20    surv2m                                   float64        
-  21    surv6m                                   float64        
-  22    hday                                     int64          
-  23    diabetes                                 int64          
-  24    dementia                                 int64          
-  25    ca                                       object         
-  26    prg2m                                    float64        
-  27    prg6m                                    float64        
-  28    dnr                                      object         
-  29    dnrday                                   float64        
-  30    meanbp                                   float64        
-  31    wblc                                     float64        
-  32    hrt                                      float64        
-  33    resp                                     float64        
-  34    temp                                     float64        
-  35    pafi                                     float64        
-  36    alb                                      float64        
-  37    bili                                     float64        
-  38    crea                                     float64        
-  39    sod                                      float64        
-  40    ph                                       float64        
-  41    glucose                                  float64        
-  42    bun                                      float64        
-  43    urine                                    float64        
-  44    adlp                                     float64        
-  45    adls                                     float64        
-  46    sfdm2                                    object         
-  47    adlsc                                    float64        
+  1     id                                       int64          
+  2     age                                      float64        
+  3     death                                    int64          
+  4     sex                                      object         
+  5     hospdead                                 int64          
+  6     slos                                     int64          
+  7     d.time                                   int64          
+  8     dzgroup                                  object         
+  9     dzclass                                  object         
+  10    num.co                                   int64          
+  11    edu                                      float64        
+  12    income                                   object         
+  13    scoma                                    float64        
+  14    charges                                  float64        
+  15    totcst                                   float64        
+  16    totmcst                                  float64        
+  17    avtisst                                  float64        
+  18    race                                     object         
+  19    sps                                      float64        
+  20    aps                                      float64        
+  21    surv2m                                   float64        
+  22    surv6m                                   float64        
+  23    hday                                     int64          
+  24    diabetes                                 int64          
+  25    dementia                                 int64          
+  26    ca                                       object         
+  27    prg2m                                    float64        
+  28    prg6m                                    float64        
+  29    dnr                                      object         
+  30    dnrday                                   float64        
+  31    meanbp                                   float64        
+  32    wblc                                     float64        
+  33    hrt                                      float64        
+  34    resp                                     float64        
+  35    temp                                     float64        
+  36    pafi                                     float64        
+  37    alb                                      float64        
+  38    bili                                     float64        
+  39    crea                                     float64        
+  40    sod                                      float64        
+  41    ph                                       float64        
+  42    glucose                                  float64        
+  43    bun                                      float64        
+  44    urine                                    float64        
+  45    adlp                                     float64        
+  46    adls                                     float64        
+  47    sfdm2                                    object         
+  48    adlsc                                    float64        
 
 ----------------------------------------------------------------------
   STEP 3 | SELECT BINARY OUTCOME VARIABLE
@@ -81,7 +82,7 @@
 
   The outcome must be binary: 0/1, Yes/No, True/False, or any 2-category variable.
   Example: Mortality, Survival, Diagnosis, Treatment_Success
-  [OK] Outcome column: 'death'  (categories: ['0', '1'])
+  [OK] Outcome column: 'hospdead'  (categories: ['0', '1'])
 
 ----------------------------------------------------------------------
   STEP 4 | SELECT PREDICTOR VARIABLES
@@ -91,33 +92,31 @@
   Continuous, binary, and categorical predictors are all accepted.
   Categorical predictors will be automatically dummy-encoded.
   Type 'done' when finished. At least 1 predictor is required.
-  [OK] Added: 'age'  (dtype: float64, unique values: 7323)
-  [OK] Added: 'meanbp'  (dtype: float64, unique values: 164)
-  [OK] Added: 'hrt'  (dtype: float64, unique values: 186)
-  [OK] Added: 'resp'  (dtype: float64, unique values: 66)
-  [OK] Added: 'temp'  (dtype: float64, unique values: 98)
-  [OK] Added: 'wblc'  (dtype: float64, unique values: 499)
-  [OK] Added: 'sod'  (dtype: float64, unique values: 60)
+  [OK] Added: 'diabetes'  (dtype: int64, unique values: 2)
 
-  Predictors selected (7): ['age', 'meanbp', 'hrt', 'resp', 'temp', 'wblc', 'sod']
+  Predictors selected (1): ['diabetes']
 
 ----------------------------------------------------------------------
   STEP 5 | DATA CLEANING & PREPARATION
 ----------------------------------------------------------------------
 
   Original rows : 9,105
-  Dropped (NaN)       : 212
 
-  Total dropped    : 212
-  Rows for analysis: 8,893
+  Total dropped    : 0
+  Rows for analysis: 9,105
 
   Outcome encoding: {np.int64(0): 0, np.int64(1): 1}
   Event (Y=1)     : '1'
-  Events (Y=1)    : 6,049  (68.0%)
-  Non-events (Y=0): 2,844  (32.0%)
+  Events (Y=1)    : 2,360  (25.9%)
+  Non-events (Y=0): 6,745  (74.1%)
 
-  Design matrix : 8893 rows × 8 columns
-  (includes intercept + 7 predictor term(s))
+  [WARNING] 9,101 duplicate row(s) detected.
+            If these are duplicated records, remove them before analysis.
+            If they are different patients with identical values, disregard.
+            Proceeding with all rows included.
+
+  Design matrix : 9105 rows × 2 columns
+  (includes intercept + 1 predictor term(s))
 
   [OK] Data preparation complete.
 
@@ -125,56 +124,20 @@
   DESCRIPTIVE STATISTICS
 ----------------------------------------------------------------------
 
-  OUTCOME: death
+  OUTCOME: hospdead
   Category                            Count    Percent
   ------------------------------ ---------- ----------
-  1 (event, Y=1)                      6,049      68.0%
-  0 (non-event, Y=0)                  2,844      32.0%
-  Total                               8,893     100.0%
+  1 (event, Y=1)                      2,360      25.9%
+  0 (non-event, Y=0)                  6,745      74.1%
+  Total                               9,105     100.0%
 
   PREDICTORS:
 
-  age (numeric)
-    n=8,893  Mean=62.606  SD=15.628  Min=18.042  Max=101.848
-    Median=64.805  IQR=[52.717, 74.023]
-    Mean in events (Y=1)    : 64.534
-    Mean in non-events (Y=0): 58.506
-
-  meanbp (numeric)
-    n=8,893  Mean=84.522  SD=27.806  Min=0.000  Max=195.000
-    Median=77.000  IQR=[63.000, 107.000]
-    Mean in events (Y=1)    : 83.869
-    Mean in non-events (Y=0): 85.909
-
-  hrt (numeric)
-    n=8,893  Mean=97.461  SD=31.682  Min=0.000  Max=300.000
-    Median=100.000  IQR=[72.000, 120.000]
-    Mean in events (Y=1)    : 97.400
-    Mean in non-events (Y=0): 97.591
-
-  resp (numeric)
-    n=8,893  Mean=23.351  SD=9.621  Min=0.000  Max=90.000
-    Median=24.000  IQR=[18.000, 28.000]
-    Mean in events (Y=1)    : 23.396
-    Mean in non-events (Y=0): 23.255
-
-  temp (numeric)
-    n=8,893  Mean=37.113  SD=1.256  Min=31.699  Max=41.695
-    Median=36.695  IQR=[36.195, 38.195]
-    Mean in events (Y=1)    : 37.088
-    Mean in non-events (Y=0): 37.166
-
-  wblc (numeric)
-    n=8,893  Mean=12.348  SD=9.266  Min=0.000  Max=200.000
-    Median=10.600  IQR=[7.000, 15.299]
-    Mean in events (Y=1)    : 12.317
-    Mean in non-events (Y=0): 12.413
-
-  sod (numeric)
-    n=8,893  Mean=137.568  SD=6.065  Min=110.000  Max=181.000
-    Median=137.000  IQR=[134.000, 141.000]
-    Mean in events (Y=1)    : 137.495
-    Mean in non-events (Y=0): 137.724
+  diabetes (numeric)
+    n=9,105  Mean=0.195  SD=0.396  Min=0.000  Max=1.000
+    Median=0.000  IQR=[0.000, 0.000]
+    Mean in events (Y=1)    : 0.186
+    Mean in non-events (Y=0): 0.198
 
 ----------------------------------------------------------------------
   SEPARATION CHECK (PRE-FIT)
@@ -195,14 +158,8 @@
 
   Parameter                                 β         SE          Z    p-value
   -------------------------------- ---------- ---------- ---------- ----------
-  Intercept                            1.2040     0.8362     1.4398     0.1499
-  age                                  0.0248     0.0015    16.6161     0.0000
-  meanbp                              -0.0023     0.0008    -2.7087     0.0068
-  hrt                                  0.0018     0.0008     2.3134     0.0207
-  resp                                 0.0022     0.0025     0.9093     0.3632
-  temp                                -0.0311     0.0193    -1.6150     0.1063
-  wblc                                -0.0018     0.0025    -0.7237     0.4693
-  sod                                 -0.0061     0.0038    -1.5864     0.1126
+  Intercept                           -1.0354     0.0266   -38.9727     0.0000
+  diabetes                            -0.0768     0.0610    -1.2580     0.2084
 
 ----------------------------------------------------------------------
   ODDS RATIO TABLE (Exponentiated Scale)
@@ -210,14 +167,8 @@
 
   Parameter                                OR   95% CI Lower   95% CI Upper    p-value
   -------------------------------- ---------- -------------- -------------- ----------
-  Intercept                            3.3333         0.6473        17.1659     0.1499  
-  age                                  1.0251         1.0221         1.0281     0.0000 *
-  meanbp                               0.9977         0.9961         0.9994     0.0068 *
-  hrt                                  1.0018         1.0003         1.0034     0.0207 *
-  resp                                 1.0022         0.9974         1.0071     0.3632  
-  temp                                 0.9693         0.9334         1.0067     0.1063  
-  wblc                                 0.9982         0.9933         1.0031     0.4693  
-  sod                                  0.9939         0.9865         1.0014     0.1126  
+  Intercept                            0.3551         0.3371         0.3741     0.0000 *
+  diabetes                             0.9261         0.8217         1.0438     0.2084  
 
   * = Statistically significant at α = 0.05
 
@@ -236,23 +187,23 @@
 
   Metric                                                  Value
   ---------------------------------------- --------------------
-  Log-Likelihood (fitted model)                      -5421.3783
-  Null Log-Likelihood (intercept only)               -5573.4226
-  Likelihood Ratio Statistic (χ²)                      304.0887
-  LR Test df                                                  7
-  LR Test p-value                                        0.0000
-  McFadden R²                                            0.0273
-  AIC                                                10858.7566
-  BIC                                                10915.5008
-  Sample Size (n)                                         8,893
-  Number of Predictors (k)                                    7
+  Log-Likelihood (fitted model)                      -5209.2349
+  Null Log-Likelihood (intercept only)               -5210.0324
+  Likelihood Ratio Statistic (χ²)                        1.5951
+  LR Test df                                                  1
+  LR Test p-value                                        0.2066
+  McFadden R²                                            0.0002
+  AIC                                                10422.4698
+  BIC                                                10436.7029
+  Sample Size (n)                                         9,105
+  Number of Predictors (k)                                    1
 
   MODEL FIT:
-  LR Test: χ²(7) = 304.0887, p = 0.0000
-  The model with predictors fits significantly better than the null model.
+  LR Test: χ²(1) = 1.5951, p = 0.2066
+  The model does not fit significantly better than the null model.
 
   McFadden R² INTERPRETATION:
-  McFadden R² = 0.0273 → Poor fit.
+  McFadden R² = 0.0002 → Poor fit.
   McFadden R² of 0.20–0.40 is considered excellent in applied research.
   Unlike OLS R², it cannot be interpreted as proportion of variance explained.
 
@@ -265,17 +216,17 @@
   CONFUSION MATRIX:
                                    Predicted Y=1   Predicted Y=0
   ------------------------------------------------------------
-  Actual Y=1 (Events)                      5,890             159
-  Actual Y=0 (Non-Events)                  2,620             224
+  Actual Y=1 (Events)                          0           2,360
+  Actual Y=0 (Non-Events)                      0           6,745
 
   Metric                                        Value
   ----------------------------------- ---------------
-  Accuracy                                     0.6875
-  Sensitivity (Recall)                         0.9737
-  Specificity                                  0.0788
-  Precision (PPV)                              0.6921
-  Negative Predictive Value (NPV)              0.5849
-  F1 Score                                     0.8091
+  Accuracy                                     0.7408
+  Sensitivity (Recall)                         0.0000
+  Specificity                                  1.0000
+  Precision (PPV)                                 N/A
+  Negative Predictive Value (NPV)              0.7408
+  F1 Score                                        N/A
 
   Sensitivity: proportion of actual events correctly classified.
   Specificity: proportion of actual non-events correctly classified.
@@ -287,7 +238,7 @@
   ROC ANALYSIS
 ----------------------------------------------------------------------
 
-  Area Under the ROC Curve (AUC) : 0.6052
+  Area Under the ROC Curve (AUC) : 0.5060
   Method: Mann-Whitney U statistic equivalence (exact, tie-corrected)
 
   AUC INTERPRETATION:
@@ -299,7 +250,7 @@
   0.80 – 0.90               Excellent           
   0.90 – 1.00               Outstanding         
 
-  AUC = 0.6052 → Poor discrimination.
+  AUC = 0.5060 → No better than chance.
 
   AUC is the probability that a randomly chosen event has a higher
   predicted probability than a randomly chosen non-event.
@@ -313,21 +264,20 @@
   H0: Model is well-calibrated (predicted probabilities match observed rates).
   H1: Model is poorly calibrated.
 
-  HL χ² Statistic                             24.6562
-  Degrees of Freedom                                8
-  p-value                                      0.0018
-  Groups formed                                    10
+  HL χ² Statistic                              0.0000
+  Degrees of Freedom                                1
+  p-value                                      1.0000
+  Groups formed                                     1
   Groups with expected < 5                          0
 
-  Result : FAIL — Poor calibration (p ≤ 0.05).
-           Predicted probabilities deviate from observed event rates.
-           Model may systematically over- or under-predict risk.
+  Result : PASS — Good calibration (p > 0.05).
+           Predicted probabilities are consistent with observed event rates.
 
   BRIER SCORE:
-  Brier Score                                  0.2098
-  Brier Skill Score (vs null)                  0.0354
-  Null Brier Score (prevalence-based): 0.2175
-  Model (0.2098) < null (0.2175): model outperforms chance prediction.
+  Brier Score                                  0.1920
+  Brier Skill Score (vs null)                  0.0002
+  Null Brier Score (prevalence-based): 0.1920
+  Model (0.1920) < null (0.1920): model outperforms chance prediction.
 
   NOTE: The Hosmer-Lemeshow test depends on the number of groups,
   has low power in small samples, and excessive power in very large samples.
@@ -343,45 +293,23 @@
       VIF 5–10  : Moderate — investigate
       VIF > 10  : High — serious multicollinearity
 
-      Predictor                                  VIF
-      ----------------------------------- ----------
-      age                                    16.9892  [HIGH]
-      meanbp                                 10.3451  [HIGH]
-      hrt                                    11.8070  [HIGH]
-      resp                                    7.2464  [MOD]
-      temp                                  395.4646  [HIGH]
-      wblc                                    2.8269
-      sod                                   378.8956  [HIGH]
+      Only one predictor — VIF not applicable.
 
   [2] LINEARITY OF LOGIT — Box-Tidwell Test (continuous predictors only)
       H0: Logit(P) is linear in X.
       H1: Non-linear logit relationship exists.
       NOTE: Binary and dummy-encoded predictors are excluded.
 
-      Predictor                      β (X·ln X)     p-value      Result              
-      ------------------------------ -------------- ------------ --------------------
-      age                            -0.0260        0.0015       FAIL (non-linear)   
-      [ACTION] Consider transforming 'age' (log, sqrt, polynomial).
-      meanbp                         0.0096         0.0174       FAIL (non-linear)   
-      [ACTION] Consider transforming 'meanbp' (log, sqrt, polynomial).
-      hrt                            -0.0009        0.7590       PASS (linear)       
-      resp                           -0.0013        0.8679       PASS (linear)       
-      temp                           3.1165         0.0020       FAIL (non-linear)   
-      [ACTION] Consider transforming 'temp' (log, sqrt, polynomial).
-      wblc                           0.0112         0.0073       FAIL (non-linear)   
-      [ACTION] Consider transforming 'wblc' (log, sqrt, polynomial).
-      sod                            0.1856         0.0688       PASS (linear)       
+      No continuous predictors — Box-Tidwell test not applicable.
 
   [3] OUTLIERS — Pearson Residuals (threshold: |r| > 2)
-      Outliers detected: 68
-      Row indices: 441, 764, 832, 1027, 1090, 1193, 1274, 1376, 1513, 1718, 1794, 1826, 1833, 1861, 1960, 2357, 2382, 2389, 2402, 2412 ...
-      [ACTION] Investigate for data entry errors or clinically extreme values.
+      No outliers detected.
 
   [4] INFLUENTIAL OBSERVATIONS — Cook's Distance
       Method    : exact via GLMInfluence (X'WX hat matrix)
       Threshold : D > 4/n = 0.0004
-      Influential observations: 238
-      Row indices: 31, 160, 210, 266, 317, 323, 441, 556, 557, 574, 834, 840, 853, 906, 931, 949, 1047, 1074, 1134, 1174 ...
+      Influential observations: 440
+      Row indices: 89, 94, 167, 251, 262, 295, 302, 342, 359, 412, 425, 515, 531, 543, 546, 547, 549, 552, 557, 568 ...
       [ACTION] Examine these observations. Consider sensitivity
                analysis with and without influential cases.
 
@@ -392,26 +320,16 @@
       No quasi-separation detected in fitted probabilities.
 
   DIAGNOSTIC SUMMARY:
-  • High VIF for 'age' (16.99) — multicollinearity concern.
-  • High VIF for 'meanbp' (10.35) — multicollinearity concern.
-  • High VIF for 'hrt' (11.81) — multicollinearity concern.
-  • High VIF for 'temp' (395.46) — multicollinearity concern.
-  • High VIF for 'sod' (378.90) — multicollinearity concern.
-  • Non-linear logit for 'age' — consider transformation.
-  • Non-linear logit for 'meanbp' — consider transformation.
-  • Non-linear logit for 'temp' — consider transformation.
-  • Non-linear logit for 'wblc' — consider transformation.
-  • 68 outlier(s) detected.
-  • 238 influential observation(s) detected (Cook's D > 4/n).
+  • 440 influential observation(s) detected (Cook's D > 4/n).
 
 ----------------------------------------------------------------------
   MEDICAL & STATISTICAL INTERPRETATION
 ----------------------------------------------------------------------
 
-  OUTCOME              : death (event = '1')
-  SAMPLE SIZE          : 8,893
-  EVENTS (Y=1)         : 6,049  (68.0%)
-  NUMBER OF PREDICTORS : 7
+  OUTCOME              : hospdead (event = '1')
+  SAMPLE SIZE          : 9,105
+  EVENTS (Y=1)         : 2,360  (25.9%)
+  NUMBER OF PREDICTORS : 1
 
   WHAT DOES BINARY LOGISTIC REGRESSION MEASURE?
   Binary logistic regression models the probability of a binary outcome
@@ -422,38 +340,18 @@
   event per unit increase in the predictor.
 
   OVERALL MODEL:
-  The model is statistically significant (LR χ²(7) = 304.0887, p = 0.0000).
-  The predictors collectively explain statistically significant variation
-  in 'death' compared to the null (intercept-only) model.
+  The model is NOT statistically significant (LR χ²(1) = 1.5951, p = 0.2066).
+  The predictors do not significantly improve prediction of 'hospdead'.
 
   SIGNIFICANT PREDICTORS AND ODDS RATIO INTERPRETATION:
 
-  age:
-    OR = 1.0251  (95% CI: 1.0221 to 1.0281,  p = 0.0000)
-    A one-unit increase in 'age' is associated with a
-    2.5% increase in the odds of '1',
-    controlling for all other variables in the model.
-    [NOTE] OR ≈ 1.0 despite significance. Clinical importance may be limited.
-
-  meanbp:
-    OR = 0.9977  (95% CI: 0.9961 to 0.9994,  p = 0.0068)
-    A one-unit increase in 'meanbp' is associated with a
-    0.2% decrease in the odds of '1',
-    controlling for all other variables in the model.
-    [NOTE] OR ≈ 1.0 despite significance. Clinical importance may be limited.
-
-  hrt:
-    OR = 1.0018  (95% CI: 1.0003 to 1.0034,  p = 0.0207)
-    A one-unit increase in 'hrt' is associated with a
-    0.2% increase in the odds of '1',
-    controlling for all other variables in the model.
-    [NOTE] OR ≈ 1.0 despite significance. Clinical importance may be limited.
+  No individual predictor reached statistical significance at α = 0.05.
 
   STATISTICAL vs CLINICAL SIGNIFICANCE:
   A significant p-value indicates the association is unlikely due to chance.
   It does NOT confirm clinical importance or actionability.
 
-  LARGE SAMPLE NOTE (n = 8,893):
+  LARGE SAMPLE NOTE (n = 9,105):
   With large samples, trivially small ORs can reach significance.
   Assess OR magnitude and CI width for clinical relevance.
   An OR of 1.05 may be significant but clinically unimportant.
@@ -461,12 +359,12 @@
   LIMITATIONS:
   • ASSOCIATION ≠ CAUSATION. Significant ORs do not establish causality.
   • RESIDUAL CONFOUNDING. The model controls only for included variables.
-  • CLASS IMBALANCE. Event rate = 68.0%. Classification metrics
+  • CLASS IMBALANCE. Event rate = 25.9%. Classification metrics
     may be misleading. AUC and calibration are more robust.
   • RARE OUTCOMES. Very low event rates destabilise coefficient estimates.
   • PERFECT SEPARATION. Inflates SEs; use Firth regression if detected.
-  • OVERFITTING. With 6049 events and 7 predictors,
-    EPV = 864.1. Adequate.
+  • OVERFITTING. With 2360 events and 1 predictors,
+    EPV = 2360.0. Adequate.
   • EXTERNAL VALIDITY. Results may not generalise beyond this population.
   • INTERACTIONS. This model does not include interaction terms.
 
