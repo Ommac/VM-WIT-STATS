@@ -2,42 +2,42 @@
   VM-WIT-STATS | VM Medical College Statistical Analysis Toolkit
   Module  : Chi-Square Test of Independence
   Dataset : data/support2.csv
-  Date    : 2026-06-25 16:58:40
+  Date    : 2026-07-01 17:39:22
 ======================================================================
 
   DESCRIPTIVE STATISTICS
 ----------------------------------------------------------------------
-  Variable         : death
+  Variable         : diabetes
   Total Valid N    : 9,105
   Categories (2): ['0', '1']
   Category                            Count    Percent
   ------------------------------ ---------- ----------
-  0                                   2,904     31.89%
-  1                                   6,201     68.11%
+  0                                   7,327     80.47%
+  1                                   1,778     19.53%
 
-  Variable         : sex
+  Variable         : dementia
   Total Valid N    : 9,105
-  Categories (2): ['female', 'male']
+  Categories (2): ['0', '1']
   Category                            Count    Percent
   ------------------------------ ---------- ----------
-  female                              3,980     43.71%
-  male                                5,125     56.29%
+  0                                   8,809     96.75%
+  1                                     296      3.25%
 
   CONTINGENCY TABLE (Observed Frequencies)
 ----------------------------------------------------------------------
-  death                      female         male    Row Total
+  diabetes                        0            1    Row Total
   -------------------- ------------ ------------ ------------
-  0                           1,337        1,567        2,904
-  1                           2,643        3,558        6,201
+  0                           7,109          218        7,327
+  1                           1,700           78        1,778
   -------------------- ------------ ------------ ------------
-  Col Total                   3,980        5,125        9,105
+  Col Total                   8,809          296        9,105
 
   EXPECTED FREQUENCIES TABLE
 ----------------------------------------------------------------------
-  death                      female         male
+  diabetes                        0            1
   -------------------- ------------ ------------
-  0                        1269.40      1634.60 
-  1                        2710.60      3490.40 
+  0                        7088.80       238.20 
+  1                        1720.20        57.80 
   * = Expected frequency < 5
 
   ASSUMPTION CHECKS
@@ -48,35 +48,35 @@
        Total cells              : 4
        Cells with expected < 5  : 0
        Percentage below 5       : 0.0%
-       Minimum expected count   : 1269.4036
+       Minimum expected count   : 57.8021
        Result: ASSUMPTION SATISFIED
 
   CHI-SQUARE TEST RESULTS
 ----------------------------------------------------------------------
   Test               : Chi-Square Test of Independence
-  Variable 1         : death  (2 categories)
-  Variable 2         : sex  (2 categories)
-  Chi-Square (χ²)    : 9.3897
+  Variable 1         : diabetes  (2 categories)
+  Variable 2         : dementia  (2 categories)
+  Chi-Square (χ²)    : 9.0652
   Degrees of Freedom : 1
-  p-value            : 0.0022
+  p-value            : 0.0026
   Total N            : 9,105
   Result             : SIGNIFICANT (p < 0.05)
 
   EFFECT SIZE
 ----------------------------------------------------------------------
-  Cramer's V                     : 0.0321
+  Cramer's V                     : 0.0316
   Effect Size Interpretation     : Negligible
   Formula                        : V = √( χ² / (N × min(r−1, c−1)) )
 
   MEDICAL & STATISTICAL INTERPRETATION
 ----------------------------------------------------------------------
   There is a statistically significant association between the variables.
-  χ²(1) = 9.3897, p = 0.0022, Cramer's V = 0.0321
+  χ²(1) = 9.0652, p = 0.0026, Cramer's V = 0.0316
 
   The Chi-Square Test of Independence tests whether two categorical
   variables are associated or independent. A significant result indicates
   that the distribution of one variable differs across categories of the other.
-  Effect size (Cramer's V = 0.0321) is classified as: Negligible.
+  Effect size (Cramer's V = 0.0316) is classified as: Negligible.
   Statistical significance does not imply causation.
   Confounding variables have not been adjusted for in this analysis.
 
