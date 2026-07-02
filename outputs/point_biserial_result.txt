@@ -1,0 +1,88 @@
+======================================================================
+  VM-WIT-STATS | VM Medical College Statistical Analysis Toolkit
+  Module  : Point-Biserial Correlation
+  Dataset : data/support2.csv
+  Date    : 2026-06-30 13:14:10
+======================================================================
+
+  BINARY VARIABLE ENCODING
+----------------------------------------------------------------------
+  '0' → 0
+  '1' → 1
+
+  DESCRIPTIVE STATISTICS
+----------------------------------------------------------------------
+  Overall Sample Size (n) : 9,105
+
+  Binary Variable: death
+    0                         n = 2,904
+    1                         n = 6,201
+
+  Continuous Variable: age
+    Mean              : 62.6508
+    Median            : 64.8570
+    Standard Deviation: 15.5937
+    Minimum           : 18.0420
+    Maximum           : 101.8480
+
+  Mean of 'age' by Group:
+    0                         mean = 58.5670
+    1                         mean = 64.5633
+
+  POINT-BISERIAL RESULTS
+----------------------------------------------------------------------
+  Binary Variable                : death
+  Continuous Variable            : age
+  Test                           : Point-Biserial Correlation
+
+  Point-Biserial Correlation (r_pb) : 0.1792
+  p-value                           : p < 0.001
+  Sample Size (n)                   : 9,105
+  Direction                         : Positive
+  Strength                          : Very Weak
+
+  H₀ : No association between the binary and continuous variable
+  H₁ : An association exists
+  Decision : Reject H₀
+  Result   : Highly statistically significant (p < 0.001)
+
+  ASSUMPTION CHECKS
+----------------------------------------------------------------------
+  1. Binary Variable     : CONFIRMED — 'death' has 2 categories
+  2. Continuous Variable : CONFIRMED — 'age' is numeric
+  3. Independence        : ASSUMED
+  4. Outliers (IQR rule) : 56 potential outlier(s) detected
+  5. Sample Size         : Large (n = 9,105) — evaluate effect size
+
+  INTERPRETATION
+----------------------------------------------------------------------
+  A statistically significant association was found between
+  'death' and 'age'.
+  (r_pb = 0.1792, p < 0.001)
+
+  [LARGE SAMPLE NOTE] n = 9,105. Small correlations can be
+  statistically significant at large n. Evaluate practical
+  importance of r_pb = 0.1792 in the context of your research.
+
+  MEDICAL INTERPRETATION
+----------------------------------------------------------------------
+  The very weak positive correlation (r_pb = 0.1792)
+  between 'death' and 'age' indicates a measurable
+  association between group membership and the outcome.
+
+  Statistical significance (p < 0.001) confirms this is unlikely
+  to be due to chance. However, statistical significance does not
+  imply clinical importance. Evaluate the magnitude of r_pb = 0.1792
+  in the context of your clinical research question.
+
+  LIMITATIONS
+----------------------------------------------------------------------
+  • Correlation does NOT imply causation.
+  • Only one binary and one continuous variable are supported.
+  • Sensitive to outliers in the continuous variable.
+  • Binary variable coding affects only direction, not magnitude.
+  • Small effect sizes may reach significance in large samples.
+
+======================================================================
+  END OF REPORT
+======================================================================
