@@ -1,0 +1,74 @@
+======================================================================
+  VM-WIT-STATS | VM Medical College Statistical Analysis Toolkit
+  Module  : Spearman Rank Correlation
+  Dataset : data/support2.csv
+  Date    : 2026-06-30 13:36:03
+======================================================================
+
+  DESCRIPTIVE STATISTICS
+----------------------------------------------------------------------
+  Statistic                            crea                bun
+  ---------------------- ------------------ ------------------
+  Sample Size (n)                     4,751              4,751
+  Mean                               1.7820            32.3582
+  Median                             1.2000            23.0000
+  Std Deviation                      1.7041            26.7943
+  Minimum                            0.2000             1.0000
+  Maximum                           21.5000           300.0000
+
+  SPEARMAN RANK CORRELATION RESULTS
+----------------------------------------------------------------------
+  Variable 1                    : crea
+  Variable 2                    : bun
+  Test                          : Spearman Rank Correlation (two-tailed)
+
+  Spearman Correlation Coefficient (ρ) : 0.7844
+  p-value                              : p < 0.001
+  Sample Size (n)                      : 4,751
+  Direction                            : Positive
+  Strength                             : Strong
+
+  H₀ : No monotonic association exists
+  H₁ : A monotonic association exists
+  Decision : Reject H₀
+  Result   : Highly statistically significant (p < 0.001)
+
+  ASSUMPTION CHECKS
+----------------------------------------------------------------------
+  1. Variable Scale       : CONFIRMED — ordinal or continuous
+  2. Independence         : ASSUMED
+  3. Monotonic Relationship: ASSUMED under H₁
+  4. Sample Size          : Large (n = 4,751) — evaluate effect size
+
+  INTERPRETATION
+----------------------------------------------------------------------
+  A statistically significant monotonic association was found
+  between 'crea' and 'bun'.
+  (ρ = 0.7844, p < 0.001)
+  As 'crea' increases, 'bun' tends to increase.
+
+  [LARGE SAMPLE NOTE] n = 4,751. Small ρ values can be
+  statistically significant at large n. Evaluate practical
+  importance of ρ = 0.7844 in the context of your research.
+
+  MEDICAL INTERPRETATION
+----------------------------------------------------------------------
+  The strong positive association (ρ = 0.7844)
+  between 'crea' and 'bun' indicates that
+  higher values of 'crea' are consistently associated with higher values of 'bun'.
+
+  Statistical significance (p < 0.001) confirms this is
+  unlikely to be due to chance. However, statistical significance
+  does not imply clinical importance. Evaluate the magnitude of
+  ρ = 0.7844 in the context of your clinical research question.
+
+  LIMITATIONS
+----------------------------------------------------------------------
+  • Correlation does NOT imply causation.
+  • Detects monotonic association only — not linearity.
+  • Sensitive to excessive tied ranks.
+  • Small effect sizes may reach significance in large samples.
+
+======================================================================
+  END OF REPORT
+======================================================================
