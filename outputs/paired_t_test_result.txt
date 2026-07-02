@@ -1,0 +1,58 @@
+======================================================================
+VM-WIT-STATS | VM Medical College Statistical Analysis Toolkit
+======================================================================
+Test              : Paired T-Test
+Date/Time         : 2026-07-01 16:51:34
+Measurement 1     : resp (Baseline / Pre)
+Measurement 2     : bili (Follow-up / Post)
+======================================================================
+
+DESCRIPTIVE STATISTICS
+----------------------------------------------------------------------
+  N (paired pairs)      : 6504
+  resp Mean           : 23.4382
+  resp Std Dev        : 9.6287
+  bili Mean           : 2.5545
+  bili Std Dev        : 5.3184
+
+  Differences (post - pre):
+    Mean Difference     : -20.8837
+    Std Dev of Diff     : 10.9050
+    Min Difference      : -85.9004
+    Max Difference      : 41.2969
+
+ASSUMPTION CHECK
+----------------------------------------------------------------------
+  Normality of Differences (Shapiro-Wilk):
+    [Differences (post - pre)] n=6504 > 5000. Normality assumed via CLT; Shapiro-Wilk skipped.
+
+TEST RESULTS
+----------------------------------------------------------------------
+  T-Statistic           : 154.4449
+  Degrees of Freedom    : 6503
+  P-Value               : 0.000000
+  Mean Difference       : -20.8837  (bili - resp)
+  95% CI for Difference : [-21.1488, -20.6187]
+
+EFFECT SIZE
+----------------------------------------------------------------------
+  Cohen's d             : -1.9151
+  Magnitude             : Large
+  Reference: Small=0.2 | Medium=0.5 | Large=0.8
+
+INTERPRETATION
+----------------------------------------------------------------------
+  Highly statistically significant (p < 0.001).
+
+  Medical Conclusion:
+  The mean bili (2.5545) is significantly different from
+  the mean resp (23.4382).
+  (t = 154.4449, df = 6503, p = 0.000000)
+
+  [✔] Treatment effect detected.
+
+  NOTE: If differences are NOT normally distributed, consider using
+        the Wilcoxon Signed-Rank Test (non-parametric alternative).
+======================================================================
+END OF REPORT
+======================================================================
