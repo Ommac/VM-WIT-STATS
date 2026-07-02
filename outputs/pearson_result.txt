@@ -1,0 +1,225 @@
+
+======================================================================
+        VM-WIT-STATS | VM Medical College
+        Statistical Analysis Toolkit
+        Module : Pearson Correlation
+======================================================================
+
+  This module computes Pearson Correlation.
+  It measures the strength and direction of a linear relationship
+  between two continuous variables.
+
+----------------------------------------------------------------------
+  STEP 1 | LOAD DATASET
+----------------------------------------------------------------------
+
+  [OK] Dataset loaded.
+       Rows    : 9,105
+       Columns : 48
+
+----------------------------------------------------------------------
+  STEP 2 | AVAILABLE COLUMNS
+----------------------------------------------------------------------
+
+  #     Column Name                              Dtype          
+  ----- ---------------------------------------- ---------------
+  1     id                                       int64          
+  2     age                                      float64        
+  3     death                                    int64          
+  4     sex                                      object         
+  5     hospdead                                 int64          
+  6     slos                                     int64          
+  7     d.time                                   int64          
+  8     dzgroup                                  object         
+  9     dzclass                                  object         
+  10    num.co                                   int64          
+  11    edu                                      float64        
+  12    income                                   object         
+  13    scoma                                    float64        
+  14    charges                                  float64        
+  15    totcst                                   float64        
+  16    totmcst                                  float64        
+  17    avtisst                                  float64        
+  18    race                                     object         
+  19    sps                                      float64        
+  20    aps                                      float64        
+  21    surv2m                                   float64        
+  22    surv6m                                   float64        
+  23    hday                                     int64          
+  24    diabetes                                 int64          
+  25    dementia                                 int64          
+  26    ca                                       object         
+  27    prg2m                                    float64        
+  28    prg6m                                    float64        
+  29    dnr                                      object         
+  30    dnrday                                   float64        
+  31    meanbp                                   float64        
+  32    wblc                                     float64        
+  33    hrt                                      float64        
+  34    resp                                     float64        
+  35    temp                                     float64        
+  36    pafi                                     float64        
+  37    alb                                      float64        
+  38    bili                                     float64        
+  39    crea                                     float64        
+  40    sod                                      float64        
+  41    ph                                       float64        
+  42    glucose                                  float64        
+  43    bun                                      float64        
+  44    urine                                    float64        
+  45    adlp                                     float64        
+  46    adls                                     float64        
+  47    sfdm2                                    object         
+  48    adlsc                                    float64        
+
+----------------------------------------------------------------------
+  STEP 3 | SELECT VARIABLES
+----------------------------------------------------------------------
+
+  Select Variable 1 — must be a continuous numeric variable.
+  [OK] Variable 1: 'crea'
+
+  Select Variable 2 — must be a continuous numeric variable.
+  [OK] Variable 2: 'bun'
+
+----------------------------------------------------------------------
+  STEP 5 | DATA CLEANING & VALIDATION
+----------------------------------------------------------------------
+
+  Original rows : 9,105
+  Dropped (NaN)      : 4,354 row(s)
+
+  Total dropped  : 4,354
+  Valid pairs    : 4,751
+
+  [OK] Data is clean and ready for analysis.
+
+----------------------------------------------------------------------
+  DESCRIPTIVE STATISTICS
+----------------------------------------------------------------------
+
+  Statistic                              crea                bun
+  ------------------------ ------------------ ------------------
+  Sample Size (n)                       4,751              4,751
+  Mean                                 1.7820            32.3582
+  Median                               1.2000            23.0000
+  Std Deviation                        1.7041            26.7943
+  Minimum                              0.2000             1.0000
+  Maximum                             21.5000           300.0000
+
+----------------------------------------------------------------------
+  ASSUMPTION CHECKS
+----------------------------------------------------------------------
+
+  [1] Continuous Variables
+      ASSUMED: Both 'crea' and 'bun' are continuous and numeric.
+      Pearson correlation is appropriate for continuous data.
+      For ordinal variables, use Spearman or Kendall's Tau instead.
+
+  [2] Independence of Observations
+      ASSUMED: Each observation is independent.
+      Pearson correlation is not appropriate for repeated measures
+      or clustered data without adjustment.
+
+  [3] Linear Relationship
+      Pearson r measures the strength of a LINEAR relationship only.
+      A non-significant r does not rule out a non-linear association.
+      Inspect a scatterplot to verify the relationship is approximately linear.
+
+  [4] Outlier Sensitivity
+      [WARNING] Potential outliers detected:
+        'crea': 540 potential outlier(s) (IQR rule).
+        'bun': 267 potential outlier(s) (IQR rule).
+      Pearson r is sensitive to outliers. A single extreme observation
+      can substantially inflate or deflate the correlation.
+      Consider Spearman correlation as a robust alternative.
+
+  [5] Large Sample Interpretation
+      [NOTE] Large sample (n = 4,751).
+      With large samples, even trivially small correlations
+      can reach statistical significance (p < 0.05).
+      Assess the magnitude of r, not the p-value alone,
+      when judging practical importance.
+
+----------------------------------------------------------------------
+  STEP 6 | RUNNING PEARSON CORRELATION
+----------------------------------------------------------------------
+
+----------------------------------------------------------------------
+  PEARSON CORRELATION RESULTS
+----------------------------------------------------------------------
+
+  Variable 1       : crea
+  Variable 2       : bun
+  H₀               : No linear correlation (ρ = 0)
+  H₁               : A linear correlation exists (ρ ≠ 0)
+  Significance (α) : 0.05
+
+  --------------------------------------------------------------------
+  Statistic                                               Value
+  --------------------------------------------------------------------
+  Pearson r                                              0.6827
+  r² (Coefficient of Determination)                      0.4661
+  p-value (two-sided)                                    0.0000
+  Sample Size (n)                                         4,751
+  Direction                                            Positive
+  Strength                                               Strong
+  --------------------------------------------------------------------
+
+  Result  : SIGNIFICANT (p < 0.05)
+  p-value : 0.0000  (α = 0.05)
+
+----------------------------------------------------------------------
+  MEDICAL & STATISTICAL INTERPRETATION
+----------------------------------------------------------------------
+
+  STATISTICAL CONCLUSION:
+  A statistically significant positive linear correlation
+  was detected between 'crea' and 'bun'.
+  (r = 0.6827, p = 0.0000, n = 4,751)
+
+  As 'crea' increases, 'bun' tends to increase.
+
+  EFFECT MAGNITUDE:
+  r = 0.6827 indicates a strong positive correlation.
+  r² = 0.4661: 46.6% of the variance in one variable is
+  linearly explained by the other.
+  The association is strong and is likely to be clinically meaningful.
+
+  STATISTICAL vs PRACTICAL SIGNIFICANCE:
+  A statistically significant p-value indicates the correlation is
+  unlikely to be zero in the population. It does NOT indicate
+  the correlation is clinically meaningful or large.
+
+  LARGE SAMPLE NOTE (n = 4,751):
+  With large samples, even very small correlations (e.g. r = 0.05)
+  can reach statistical significance. Focus on the magnitude
+  of r and its clinical relevance, not the p-value alone.
+
+----------------------------------------------------------------------
+  LIMITATIONS
+----------------------------------------------------------------------
+
+  • CORRELATION ≠ CAUSATION.
+    A significant Pearson r between 'crea' and 'bun' does not
+    establish that one causes the other.
+
+  • LINEAR RELATIONSHIPS ONLY.
+    Pearson r detects only linear associations. A strong non-linear
+    relationship (e.g. quadratic, exponential) may produce r ≈ 0.
+
+  • SENSITIVE TO OUTLIERS.
+    A single extreme observation can substantially change the value of r.
+    Spearman correlation is more robust to outliers.
+
+  • CONTINUOUS VARIABLES ASSUMED.
+    Pearson r is designed for continuous data. Results may be
+    misleading for ordinal or discrete variables with few categories.
+
+  • LARGE SAMPLES.
+    In large samples, statistically significant correlations may be
+    too small to be practically meaningful. Always report r alongside p.
+
+----------------------------------------------------------------------
+  SAVE REPORT
+----------------------------------------------------------------------
