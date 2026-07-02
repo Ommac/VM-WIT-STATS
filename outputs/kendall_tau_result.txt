@@ -1,95 +1,68 @@
-========================================================================
-VM-WIT-STATS | VM Medical College — Medical Statistics Toolkit
-KENDALL'S TAU CORRELATION ANALYSIS
-========================================================================
-Variable 1        : age
-Variable 2        : scoma
-Original rows     : 9105
-Missing (age)  : 0
-Missing (scoma)  : 1
-Analysed (n)      : 9104
-Method            : Kendall's Tau-b (ties-corrected)
+======================================================================
+  VM-WIT-STATS | VM Medical College Statistical Analysis Toolkit
+  Module  : Kendall's Tau Correlation
+  Dataset : data/support2.csv
+  Date    : 2026-06-28 01:40:47
+======================================================================
 
-========================================================================
-1. DESCRIPTIVE STATISTICS
-========================================================================
+  DESCRIPTIVE STATISTICS
+----------------------------------------------------------------------
+  Statistic                             age              scoma
+  ---------------------- ------------------ ------------------
+  Sample Size (n)                     9,104              9,104
+  Mean                              62.6508            12.0585
+  Median                            64.8585             0.0000
+  Std Deviation                     15.5946            24.6367
+  Minimum                           18.0420             0.0000
+  Maximum                          101.8480           100.0000
 
-  Variable                          N       Mean     Median         SD        Min        Max
-  --------------------------------------------------------------------------------------
-  age                            9104    62.6508    64.8585    15.5946    18.0420   101.8480
-  scoma                          9104    12.0585     0.0000    24.6367     0.0000   100.0000
+  KENDALL'S TAU RESULTS
+----------------------------------------------------------------------
+  Variable 1                    : age
+  Variable 2                    : scoma
+  Test                          : Kendall's Tau-b (two-tailed)
 
-========================================================================
-2. KENDALL'S TAU CORRELATION
-========================================================================
+  Kendall's Tau (τ)             : 0.0338
+  p-value (two-tailed)          : 0.0000
+  Sample Size (n)               : 9,104
+  Direction                     : Positive
+  Strength                      : Negligible
 
-  Kendall's Tau-b (τ) :     0.0338
-  p-value             :    < 0.001
-  Sample Size (n)     :       9104
-  Total Pairs         :   41436856
-  Concordant Pairs    :   10679057
-  Discordant Pairs    :    9697868
-  Tied Pairs          :   21059931
+  H₀ : No monotonic association
+  H₁ : A monotonic association exists
+  Decision : Reject H₀
+  Result   : Highly statistically significant (p < 0.001)
 
-  Direction : Positive (concordant)
-  Strength  : Negligible
+  INTERPRETATION
+----------------------------------------------------------------------
+  A statistically significant monotonic association was found
+  between 'age' and 'scoma'.
+  (τ = 0.0338, p = 0.0000)
+  As 'age' increases, 'scoma' tends to increase.
 
-========================================================================
-3. HYPOTHESIS TEST
-========================================================================
+  [LARGE SAMPLE NOTE] n = 9,104. Small τ values can be
+  statistically significant at large n. Evaluate practical
+  importance of τ = 0.0338 in the context of your research.
 
-  H₀: No monotonic association between the two variables (τ = 0).
-  H₁: A monotonic association exists (τ ≠ 0).
-  Significance level (α) : 0.05
-  Decision               : Reject H₀ (p = < 0.001 < 0.05)
+  MEDICAL INTERPRETATION
+----------------------------------------------------------------------
+  The negligible positive association (τ = 0.0338)
+  between 'age' and 'scoma' indicates that
+  higher values of 'age' are consistently associated with higher values of 'scoma'.
 
-========================================================================
-4. INTERPRETATION
-========================================================================
+  Statistical significance (p = 0.0000) confirms this is
+  unlikely to be due to chance. However, statistical significance
+  does not imply clinical importance. Evaluate the magnitude of
+  τ = 0.0338 in the context of your clinical research question.
 
-  Strength Reference (Kendall's Tau-b):
-    |τ| < 0.10  : Negligible
-    0.10–0.29   : Weak
-    0.30–0.49   : Moderate
-    0.50–0.69   : Strong
-    ≥ 0.70      : Very Strong
+  LIMITATIONS
+----------------------------------------------------------------------
+  • Correlation does NOT imply causation.
+  • Detects monotonic association only — not linearity.
+  • Sensitive to excessive ties in the data.
+  • Small effect sizes may reach significance in large samples.
+  • Confounding variables have not been controlled for.
 
-  Statistical Interpretation:
-    Kendall's Tau-b = 0.0338 indicates a negligible positive (concordant) monotonic association between age and scoma. The result is statistically significant at α = 0.05. As age increases, scoma tends to increase (concordant pairs dominate).
-
-  Medical / Clinical Interpretation:
-    A negligible positive monotonic association was found between age and scoma (τ = 0.0338, p = < 0.001, n = 9104). Although statistically significant, the association is negligible in magnitude. This may reflect a very large sample detecting a trivially small effect. Clinical relevance is unlikely.
-
-========================================================================
-5. LIMITATIONS
-========================================================================
-
-
-  1. CORRELATION IS NOT CAUSATION
-     A significant Kendall's Tau indicates a monotonic association only.
-     It does not establish causal direction or mechanisms.
-
-  2. MONOTONIC ASSOCIATION ONLY
-     Kendall's Tau detects whether one variable consistently increases (or
-     decreases) as the other increases. It will not detect non-monotonic
-     relationships (e.g., U-shaped associations).
-
-  3. TIES SENSITIVITY
-     Although Tau-b corrects for tied ranks, a very high proportion of ties
-     reduces statistical power and the interpretability of the coefficient.
-     Verify that the ordinal scale has sufficient resolution for the data.
-
-  4. LINEARITY NOT IMPLIED
-     A significant Tau does not imply that the association is linear.
-     Kendall's Tau is a rank-based measure and makes no linearity assumption.
-
-  5. LARGE-SAMPLE INFLATION
-     In large samples (n > 200), even negligibly small values of τ may
-     reach statistical significance. Always evaluate effect magnitude
-     alongside the p-value.
-    
-========================================================================
-END OF REPORT — VM-WIT-STATS | VM Medical College
-For academic publication, report τ, p-value, and sample size.
-This output is research-grade and intended for trained professionals.
-========================================================================
+======================================================================
+  END OF REPORT
+======================================================================
